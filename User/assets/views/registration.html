@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <!-- <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/all.min.css"> -->
+    <link rel="stylesheet" href="/User/assets/styles/bootstrap-5.3.3-dist/css/bootstrap.css">
+</head>
+<body>
+    <div class="container-fluid mt-5">
+        <div class="row">
+            <div class="col-6 d-none d-md-block">
+                <!-- <img src="./resourses/EC.jpg" width="100%" alt=""> -->
+            </div>
+            <div class="col-md-4 col  offset-1">
+            <form action="">
+                <h3>Create an Account </h3>
+                <p>Enter your details below</p>
+                <input id="registerName" class="form-control " type="text" placeholder="Name"  required minlength="3" >
+                <br>
+                <input id="registerEmail" class="form-control" type="text" placeholder="Email or phone Number" required>
+                <br>
+                <input id="registerPassword" class="form-control" type="password" placeholder="Password"required>
+                <br>
+                <input id="registerBtn" class="form-control bg-danger text-white" type="submit" value="Create Account" aria-label="readonly input example" readonly>
+                <br>
+                <button class="form-control">
+                    <!-- <img class="me-2" src="./resourses/google.png" 
+                    alt="Google Logo" width="25">  -->
+                    Sign up with Google
+                </button>
+                <br>
+                <p style="text-align: center;">Already have account?
+                    <a class="loginLink p-2" href="./login.html">Log in</a> </p>
+            </form>
+            </div>
+        </div>
+    </div>
+
+    <p id="userInfo"></p>
+
+    <script type="module" src="/User/assets/js/firebase/firebase-initialize.js"></script>
+    <script src="/User/assets/styles/bootstrap-5.3.3-dist/js/bootstrap.js"></script>
+    
+</body>
+</html>

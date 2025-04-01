@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Homepage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/User/assets/styles/css/HomePageStyle.css">
+</head>
+<body>
+    <div class="top-bar">
+        <p>Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%! <a href="#">Shop Now</a></p>
+        <span class="language-selector">English <i class="fa-solid fa-chevron-down"></i></span>
+    </div>
+    
+    <!-- Header & Navigation-->
+    <header>
+        <div class="header-container">
+            <div class="logo">Exclusive</div>
+            
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="/User/assets/views/registration.html">Sign Up</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="search-container">
+                    <input type="text" class="search-bar" placeholder="Search...">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <div class="nav-icons">
+                    <i class="fa-regular fa-heart"></i>
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar Toggle for Mobile -->
+        <button class="sidebar-toggle" id="sidebarToggle">
+            <i class="fas fa-bars"></i> Categories
+        </button>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <ul>
+                <li>Woman's Fashion <i class="fa-solid fa-chevron-right"></i></li>
+                <li>Men's Fashion <i class="fa-solid fa-chevron-right"></i></li>
+                <li>Electronics</li>
+                <li>Home & Lifestyle</li>
+                <li>Medicine</li>
+                <li>Sports & Outdoor</li>
+                <li>Baby & Toys</li>
+                <li>Groceries & Pets</li>
+                <li>Health & Beauty</li>
+            </ul>
+        </aside>
+        
+        <!-- Banner Section -->
+        <section class="banner">
+            <div class="banner-content">
+                <p>iPhone 16 Pro</p>
+                <h1>Up to 10% off Voucher</h1>
+                <a href="homepage.html" class="shop-btn">Shop Now <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="banner-image">
+                <img src="/User/resourses/images/8d093143-4aa4-4533-96b4-8ea8ada56e97.jpg" alt="iPhone 14 Series">
+            </div>
+        </section>
+    </div>
+    
+    <!-- Flash Sales Section -->
+    <div class="container">
+        <div class="container-Section">
+            <div class="title-Section"> 
+                <div class="Section-badge">Today's</div>
+                <h1>Flash Sales</h1>
+            </div>
+            <div class="countdown">
+                <div class="countdown-item">
+                    <span>Days</span>
+                    <div class="countdown-value" id="days">03</div>
+                </div>
+                <div class="countdown-item">
+                    <span>Hours</span>
+                    <div class="countdown-value" id="hours">23</div>
+                </div>
+                <div class="countdown-item">
+                    <span>Minutes</span>
+                    <div class="countdown-value" id="minutes">19</div>
+                </div>
+                <div class="countdown-item">
+                    <span>Seconds</span>
+                    <div class="countdown-value" id="seconds">56</div>
+                </div>
+            </div>
+        </div>
+        <div class="products-container" id="productsContainer">
+            <div class="nav-arrow left" id="leftArrow">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="products-wrapper">
+                <div class="products-grid" id="productsGrid"></div>
+            </div>
+            <div class="nav-arrow right" id="rightArrow">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+        
+        <div class="view-all-container">
+            <button id="viewAllBtn" class="view-all">View All Products</button>
+        </div>
+    </div>       
+    
+    <!-- Browse By Category Section -->
+    <div class="container">
+        <div class="container-Section"> 
+            <div class="title-Section">
+                <div class="Section-badge">Categories</div>
+                <h1>Browse By Category</h1>
+            </div>
+        </div>
+        <div class="products-container" id="productsContainer2">
+            <div class="nav-arrow left" id="leftArrow2">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="products-wrapper">
+                <div class="products-grid" id="productsGrid2"></div>
+            </div>
+            <div class="nav-arrow right" id="rightArrow2">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Best Selling Products Section -->
+    <div class="container">
+        <div class="container-Section">
+            <div class="title-Section">
+                <div class="Section-badge">This Month</div>
+                <h1>Best Selling Products</h1>
+            </div>
+            <div class="view-all-container">
+                <button id="viewAllBtn3" class="view-all">View All</button>
+            </div>
+        </div>
+        <div class="products-container" id="productsContainer3">
+            <div class="nav-arrow left" id="leftArrow3">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="products-wrapper">
+                <div class="products-grid" id="productsGrid3"></div>
+            </div>
+            <div class="nav-arrow right" id="rightArrow3">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+        <div class="img-container">
+            <img src="/User/resourses/images/Frame 600.png" alt="Enhance Your Music Experience" class="img-image">
+        </div>
+    </div>
+    
+    <!-- Explore Our Products Section -->
+    <div class="container">
+        <div class="container-Section">
+            <div class="title-Section">
+                <div class="Section-badge">Our Products</div>
+                <h1>Explore Our Products</h1>
+            </div> 
+        </div>
+        <div class="products-container" id="productsContainer4">
+            <div class="nav-arrow left" id="leftArrow4">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="products-wrapper">
+                <div class="products-grid" id="productsGrid4"></div>
+            </div>
+            <div class="nav-arrow right" id="rightArrow4">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+        <div class="view-all-container">
+            <button id="viewAllBtn4" class="view-all">View All Products</button>
+        </div>
+    </div>
+    
+    <!-- New Arrival Section -->
+    <div class="container">
+        <div class="container-Section">
+            <div class="title-Section">
+                <div class="Section-badge">Featured</div>
+                <h1>New Arrival</h1>
+            </div>
+        </div>
+        <div class="new-arrival-container">
+            <div class="main-row">
+                <div class="main-col">
+                    <div class="img-container">
+                        <img src="/User/resourses/images/Frame 684.png" alt="">
+                    </div>
+                </div>
+                <div class="main-col">
+                    <div class="img-container">
+                        <img src="/User/resourses/images/Frame 685.png" alt="">
+                    </div>
+                    <div class="inner-row">
+                        <div class="inner-col">
+                            <div class="img-container">
+                                <img src="/User/resourses/images/Frame 686.png" alt="">
+                            </div>
+                        </div>
+                        <div class="inner-col">
+                            <div class="img-container">
+                                <img src="/User/resourses/images/Frame 687.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cart Page -->
+    <div class="cart-container">
+        <div class="cart-items-container"></div>
+        <div class="cart-summary">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span>$0.00</span>
+            </div>
+            <button class="checkout-btn">Checkout</button>
+        </div>
+    </div>
+    
+    <script src="/User/assets/js/home/HomePageScrapt.js"></script>
+</body>
+</html>
