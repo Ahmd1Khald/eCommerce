@@ -76,6 +76,33 @@ document
       });
   });
 
+// // User Forgot Password
+// document.getElementById("forgotPasswordBtn").addEventListener("click", function (event) {
+//     event.preventDefault(); // Prevent form reload
+  
+//     const email = document.getElementById("forgotPasswordEmail").value.trim();
+  
+//     if (!email) {
+//       alert("Please enter your email address.");
+//       return;
+//     }
+  
+//     // Send password reset email
+//     sendPasswordResetEmail(auth, email)
+//       .then(() => {
+//         // Inform the user that the reset email has been sent
+//         alert("Password reset email sent! Please check your inbox.");
+//       })
+//       .catch((error) => {
+//         // Handle errors
+//         const errorCode = error.code;
+//         const errorMessage = getErrorMessage(errorCode);
+//         console.error("Error: ", errorCode, errorMessage);
+//         alert(errorMessage);
+//       });
+//   });
+  
+
 
   // Function to translate Firebase error codes into user-friendly messages
 function getErrorMessage(errorCode) {
