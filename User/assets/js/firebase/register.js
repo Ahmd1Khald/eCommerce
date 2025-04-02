@@ -30,8 +30,7 @@ const database = getDatabase(app);
 
 // Register user with Email&Pass
 document
-  .getElementById("registerBtn")
-  .addEventListener("click", function (event) {
+  .getElementById("registerBtn").addEventListener("click", function (event) {
     event.preventDefault(); // Prevent form reload
 
     // Get user input values
@@ -55,14 +54,15 @@ document
       })
       .catch((error) => {
         console.error("Auth Error:", error);
-        alert("Error: " + error.message);
+        const errorMessage = getErrorMessage(error.code);
+        alert(errorMessage);
       });
   });
 
 // Register user with Google Account
 document
   .getElementById("registerWithGoogleBtn")
-  .addEventListener("click", function (event) {
+.addEventListener("click", function (event) {
     event.preventDefault(); // Prevent form reload
     // Register user with Google Account
     const provider = new GoogleAuthProvider();
@@ -74,17 +74,17 @@ document
         console.log("User signed up: ", user);
         // Store user data in Firebase Realtime Database
         storedUserData(user.displayName, user.email, user, "user");
+        alert("User registered successfully!");
       })
       .catch((error) => {
-        // Handle Errors here.
         const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
+        const errorMessage = getErrorMessage(errorCode);
         console.error("Error: ", errorCode, errorMessage);
+        alert(errorMessage);
       });
   });
 
+  // Function to store user data in Firebase Realtime Database
 function storedUserData(name, email, user, role) {
   set(ref(database, "users/" + user.uid), {
     name: name,
@@ -93,10 +93,32 @@ function storedUserData(name, email, user, role) {
     role: role,
   })
     .then(() => {
-      alert("User registered and data stored successfully!");
+      alert("Data Stored Successfully!");
     })
     .catch((error) => {
       console.error("Database Error:", error);
       alert("Error saving user data: " + error.message);
     });
 }
+
+
+// Function to translate Firebase error codes into user-friendly messages
+function getErrorMessage(errorCode) {
+  switch (errorCode) {
+    case "auth/invalid-email":
+      return "The email address is not valid. Please enter a valid email address.";
+    case "auth/user-disabled":
+      return "This account has been disabled. Please contact support.";
+    case "auth/email-already-in-use":
+      return "This email is already in use. Try logging in or use a different email.";
+    case "auth/weak-password":
+      return "The password is too weak. Please choose a stronger password.";
+    case "auth/operation-not-allowed":
+      return "This operation is not allowed. Please contact support.";
+    case "auth/account-exists-with-different-credential":
+      return "An account already exists with the same email but different sign-in credentials.";
+    default:
+      return "An error occurred. Please try again later.";
+  }
+}
+
