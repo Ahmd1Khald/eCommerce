@@ -74,8 +74,6 @@ async function fetchAndCreateProducts() {
     }
 }
 
-
-
 // Create a product in Firebase
 function createProduct(title, category, price, description,image, stock) {
     // Reference to the Firebase database
@@ -136,6 +134,7 @@ window.onload = function () {
 
 
 //* Handle Dashboard content that show when navbar item clicked 
+
 document.addEventListener("DOMContentLoaded", function () {
     const pageContent = document.getElementById("page-content");
     const home = document.getElementById("home");
@@ -282,17 +281,12 @@ function generateProductCards(products) {
                     <p><strong>Stock:</strong> ${p.stock}</p>
                     <p><strong>Price:</strong> ${p.price}</p>
                     <button class="btn btn-warning" onclick="editProduct(${p.id})">Edit</button>
-                    <button class="btn btn-danger" onclick="deleteProduct(${p.id})">Delete</button>
+                    <button class="btn btn-danger" onclick="deleteProduct('${p.id}')">Delete</button>
                 </div>
             </div>
         </div>
     `).join('');
 }
-
-
-
-    
-    
 
     // Function to return Categories in Page Content
     function getCategoriesContent() {
@@ -317,4 +311,21 @@ function generateProductCards(products) {
         return images;
     }
 });
+
+
+// Make deleteProduct globally accessible
+window.deleteProduct = function(productId) {
+    const productsRef = ref(database, `products/${productId}`);
+    if (confirm("Are you sure you want to delete this product?")) {
+        set(productsRef, null)
+            .then(() => {
+                console.log(`Product ${productId} deleted successfully!`);
+                const productElement = document.getElementById(`product-${productId}`);
+                if (productElement) productElement.remove();
+            })
+            .catch((error) => {
+                console.error("Error deleting product: ", error);
+            });
+    }
+};
 
