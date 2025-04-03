@@ -121,9 +121,59 @@ function getAllProducts() {
         console.error("Error fetching products:", error);
       });
   }
+
+
+// Get Product from firebase and put it in ui
+
+const productTableBody = document.querySelector(".popular-products tbody");
+
+function getPopularProducts() {
+  const dbRef = ref(database);
+
+  get(child(dbRef, "products")) // Fetch products
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const products = snapshot.val();
+        productTableBody.innerHTML = ""; // Clear old data
+
+        Object.keys(products).forEach((key) => {
+          const product = products[key];
+
+          // Create table row
+          const tr = document.createElement("tr");
+
+          tr.innerHTML = `
+            <td class="d-flex">
+              <img width="50" height="50" src="${product.image || 'https://img.icons8.com/bubbles/100/user.png'}" alt="product"/>
+              <div class="d-flex flex-column justify-content-center">
+                <h1 class="product">${product.name}</h1>
+                <span class="type">${product.category || "N/A"}</span>
+              </div>
+            </td>
+            <td class="text-end">
+              <b> $${product.price || "0"} </b>
+            </td>
+          `;
+
+          productTableBody.appendChild(tr);
+        });
+      } else {
+        productTableBody.innerHTML = "<tr><td colspan='2'>No products available</td></tr>";
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching products:", error);
+    });
+}
+
+
+
+
+
 // Ensure the fetchAndCreateProducts is called after the page loads
 window.onload = function () {
     fetchAndCreateProducts();
-    getAllProducts()
+    getAllProducts();
+    getPopularProducts();
 };
 

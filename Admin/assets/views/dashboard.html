@@ -30,7 +30,7 @@
                   src="https://img.icons8.com/bubbles/100/user.png"
                   alt="user"
                 />
-                <b>Admin-Name</b>
+                <span>Admin-Name</span>
               </a>
             </div>
 
@@ -48,7 +48,7 @@
             </button>
 
             <!--Middle navbar-->
-            <div class="col-4">
+            <div class="col-0.5">
               <div class="d-none d-lg-block">
                 <ul class="navbar-nav">
                   <li class="nav-item">
@@ -68,26 +68,12 @@
                 </ul>
               </div>
             </div>
-            <!--NavBar Left Side-->
-            <div class="col-5 leftNav collapse navbar-collapse" id="navbarNav">
+            <!--NavBar Left Side--> 
+            <div class="col-3 leftNav collapse navbar-collapse" id="navbarNav">
               <div>
-                <button class="btn btn-primary">
+                <button class="btn btn-primary ">
                   <i class="fa-solid fa-plus"></i> Add Admin
                 </button>
-              </div>
-              <div>
-                <i class="fa-regular fa-bell"></i>
-              </div>
-              <div>
-                <i class="fa-solid fa-pen"></i>
-              </div>
-              <div>
-                <img
-                  width="50"
-                  height="50"
-                  src="https://img.icons8.com/bubbles/100/user.png"
-                  alt="user"
-                />
               </div>
             </div>
           </div>
@@ -98,22 +84,16 @@
           <!-- Sidebar-->
           <div class="dashboard-List col-lg-2 p-1 d-none d-lg-block bg-light">
             <section>
-              <a href="#"><i class="fa-solid fa-house"></i> Home</a>
+              <a href="home" id="home" data-section="home"><i class="fa-solid fa-house"></i> Home</a>
             </section>
             <section>
-              <a href="#"><i class="fa-brands fa-product-hunt"></i> Products</a>
+              <a href="products" id="products" data-section="products"><i class="fa-brands fa-product-hunt"></i> Products</a>
             </section>
             <section>
-              <a href="#"><i class="fa-solid fa-users"></i> Customers</a>
+              <a href="categories" id="categories" data-section="categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
             </section>
             <section>
-              <a href="#"><i class="fa-solid fa-gift"></i> Shop</a>
-            </section>
-            <section>
-              <a href="#"><i class="fa-solid fa-money-bill"></i> Income</a>
-            </section>
-            <section>
-              <a href="#"><i class="fa-solid fa-circle-up"></i> Promote</a>
+              <a href="orders" id="orders" data-section="orders"><i class="fa-solid fa-truck"></i> Orders</a>
             </section>
             <!--Logout buttons-->
             <hr>
@@ -124,268 +104,18 @@
               <a href="#"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
             </section>
           </div>
-          <!--Dashboard-->
-          <div class="dashboard-container col-sm-12 col-lg-10 p-3">
-            <h1>Dashboard</h1>
-            <div class="row">
-              <!--Middle content(Main)-->
-              <div class="col-sm-12 col-xl-9">
-                <!--Overview Section-->
-                <section class="overview-container col-sm-12">
-                  <!--Overview box-->
-                  <div class="overview-box">
-                    <div class="overview d-flex">
-                      <h2>Overview</h2>
-                      <select class="list-items">
-                        <option selected>All time</option>
-                        <option value="">Last Month</option>
-                        <option value="">Last Week</option>
-                        <option value="">Today</option>
-                      </select>
-                    </div>
-                    <!--Customers & incomes-->
-                    <div class="customers-incomes d-flex">
-                      <!--Customer section-->
-                      <div class="customers col-5">
-                        <section class="customer-number">
-                          <span>Customers</span>
-                          <h4>10,243</h4>
-                        </section>
-                        <section>
-                          <span class="customer-percentage">8%</span>
-                        </section>
-                      </div>
-                      <!--Income section-->
-                      <div class="incomes col-5">
-                        <section class="income-number">
-                          <span>Income</span>
-                          <h4>$33333333</h4>
-                        </section>
-                        <section class="income-percentage">
-                          <span class="customer-percentage">8%</span>
-                        </section>
-                      </div>
-                    </div>
-                    <!--Admins-->
-                    <div class="admins">
-                      <h5 class="welcome-admins">
-                        Welcome to our <b>new online experience</b>
-                      </h5>
-                      <div
-                        class="admins-Images d-flex flex-wrap justify-content-evenly"
-                      >
-                        <section>
-                          <img
-                            width="100"
-                            height="100"
-                            src="https://img.icons8.com/bubbles/100/user.png"
-                            alt="user"
-                          />
-                          <span>Mostafa Mohamed</span>
-                        </section>
-                        <section>
-                          <img
-                            width="100"
-                            height="100"
-                            src="https://img.icons8.com/bubbles/100/user.png"
-                            alt="user"
-                          />
-                          <span>Mostafa Mohamed</span>
-                        </section>
-                        <section>
-                          <img
-                            width="100"
-                            height="100"
-                            src="https://img.icons8.com/bubbles/100/user.png"
-                            alt="user"
-                          />
-                          <span>Mostafa Mohamed</span>
-                        </section>
-                        <section>
-                          <img
-                            width="100"
-                            height="100"
-                            src="https://img.icons8.com/bubbles/100/user.png"
-                            alt="user"
-                          />
-                          <span>Mostafa Mohamed</span>
-                        </section>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-                <!--Total Income Section-->
-                <section class="total-income-container col-sm-12">
-                  <!--Total Income box-->
-                  <div class="total-income-box">
-                    <div class="total-income d-flex">
-                      <h2>Total Income</h2>
-                      <select class="list-items">
-                        <option selected>All time</option>
-                        <option value="">Last Month</option>
-                        <option value="">Last Week</option>
-                        <option value="">Today</option>
-                      </select>
-                    </div>
-                    <canvas
-                      id="myChart"
-                      style="width: 100%; max-width: 700px"
-                    ></canvas>
-                  </div>
-                </section>
-              </div>
-              <!--SideBar for main content (dashboard)-->
-              <div class="col-sm-12 col-xl-3">
-                <!--Popular Products Section-->
-                <section class="popular-products">
-                  <h4>Popular Products</h4>
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th class="col-10">Product</th>
-                        <th class="col-2">Earning</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <!--Table Element 1-->
-                      <tr>
-                        <td class="d-flex">
-                          <img
-                            width="50"
-                            height="50"
-                            src="https://img.icons8.com/bubbles/100/user.png"
-                            alt="user"
-                          />
-                          <div
-                            class="d-flex flex-column justify-content-center"
-                          >
-                            <h1 class="product">Product A</h1>
-                            <span class="type">UI Kit</span>
-                          </div>
-                        </td>
-                        <td class="text-end">
-                          <b> $1000 </b>
-                        </td>
-                      </tr>
-                      <!--Table Element 2-->
-                      <tr>
-                        <td class="d-flex">
-                          <img
-                            width="50"
-                            height="50"
-                            src="https://img.icons8.com/bubbles/100/user.png"
-                            alt="user"
-                          />
-                          <div
-                            class="d-flex flex-column justify-content-center"
-                          >
-                            <h1 class="product">Product A</h1>
-                            <span class="type">UI Kit</span>
-                          </div>
-                        </td>
-                        <td class="text-end">
-                          <b> $1000 </b>
-                        </td>
-                      </tr>
-                      <!--Table Element 3-->
-                      <tr>
-                        <td class="d-flex">
-                          <img
-                            width="50"
-                            height="50"
-                            src="https://img.icons8.com/bubbles/100/user.png"
-                            alt="user"
-                          />
-                          <div
-                            class="d-flex flex-column justify-content-center"
-                          >
-                            <h1 class="product">Product A</h1>
-                            <span class="type">UI Kit</span>
-                          </div>
-                        </td>
-                        <td class="text-end">
-                          <b> $1000 </b>
-                        </td>
-                      </tr>
-                      <!--Table Element 4-->
-                      <tr>
-                        <td class="d-flex">
-                          <img
-                            width="50"
-                            height="50"
-                            src="https://img.icons8.com/bubbles/100/user.png"
-                            alt="user"
-                          />
-                          <div
-                            class="d-flex flex-column justify-content-center"
-                          >
-                            <h1 class="product">Product A</h1>
-                            <span class="type">UI Kit</span>
-                          </div>
-                        </td>
-                        <td class="text-end">
-                          <b> $1000 </b>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <!--View All Products Button-->
-                  <div class="d-grid gap-2">
-                    <button class="btn btn-primary" type="button">
-                      All Products
-                    </button>
-                  </div>
-                </section>
-                <!--Comments Section-->
-                <section class="comments-section">
-                  <h4>Comments</h4>
-                  <div class="table-comments">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th class="col-10">Comment</th>
-                          <th class="col-2">Date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <!--comment & date 1-->
-                        <tr>
-                          <td class="d-flex">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Eos
-                          </td>
-                          <td><b> 1/10/2001</b></td>
-                        </tr>
-                        <!--comment & date 2-->
-                        <tr>
-                          <td class="d-flex">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Eos
-                          </td>
-                          <td><b> 1/10/2001</b></td>
-                        </tr>
-                        <!--comment & date 3-->
-                        <tr>
-                          <td class="d-flex">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Eos
-                          </td>
-                          <td><b> 1/10/2001</b></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
-              </div>
-            </div>
-          </div>
+          <div class="dashboard-container col-sm-12 col-lg-10 p-1">
+            <div id="page-content">Dashboard</div> <!-- This element must exist -->
+        </div>        
         </div>
       </div>
     </div>
-
+    
+    <script src="/Admin/assets/js/main/dashboard.js"></script>
+    
     <!-- JS For charts-->
     <script src="../styles/bootstrap-5.3.3-dist/js/bootstrap.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></scrip>
     <script src="../js/main/char.js"></script>
 
     <!-- JS For Firebase -->
