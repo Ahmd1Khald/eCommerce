@@ -44,8 +44,8 @@ const database = getDatabase(app);
 // });
 
 // API URL for external product data
-const apiUrl = 'https://fakestoreapi.com/products'; // Replace with your API URL
-console.log(data);
+// const apiUrl = 'https://fakestoreapi.com/products'; // Replace with your API URL
+// console.log(data);
 
 // Fetch and Create Products in Firebase
 async function fetchAndCreateProducts() {
@@ -105,75 +105,216 @@ function createProduct(title, category, price, description,image, stock) {
         });
 }
 
-// get all products in firebase
+// Fetch all products in Firebase
 function getAllProducts() {
     const dbRef = ref(database);
-  
-    get(child(dbRef, "products")) // 🔹 Fetch all products
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          console.log(snapshot.val()); // Logs all products
-        } else {
-          console.log("No data available");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-      });
-  }
-
-
-// Get Product from firebase and put it in ui
-
-const productTableBody = document.querySelector(".popular-products tbody");
-
-function getPopularProducts() {
-  const dbRef = ref(database);
-
-  get(child(dbRef, "products")) // Fetch products
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        const products = snapshot.val();
-        productTableBody.innerHTML = ""; // Clear old data
-
-        Object.keys(products).forEach((key) => {
-          const product = products[key];
-
-          // Create table row
-          const tr = document.createElement("tr");
-
-          tr.innerHTML = `
-            <td class="d-flex">
-              <img width="50" height="50" src="${product.image || 'https://img.icons8.com/bubbles/100/user.png'}" alt="product"/>
-              <div class="d-flex flex-column justify-content-center">
-                <h1 class="product">${product.name}</h1>
-                <span class="type">${product.category || "N/A"}</span>
-              </div>
-            </td>
-            <td class="text-end">
-              <b> $${product.price || "0"} </b>
-            </td>
-          `;
-
-          productTableBody.appendChild(tr);
+    return get(child(dbRef, "products")) // Fetch all products
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                const productsData = snapshot.val(); // Get the raw data object
+                // Convert to array with IDs
+                const productsArray = Object.entries(productsData).map(([id, product]) => ({
+                    id, // Include the Firebase key as the product ID
+                    ...product // Spread the product properties (title, description, etc.)
+                }));
+                return productsArray; // Return the array of products
+            } else {
+                return []; // Return an empty array if no data exists
+            }
+        })
+        .catch((error) => {
+            console.error("Error fetching products:", error);
+            return []; // Return an empty array in case of error
         });
-      } else {
-        productTableBody.innerHTML = "<tr><td colspan='2'>No products available</td></tr>";
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching products:", error);
+}
+// Ensure the fetchAndCreateProducts is called after the page loads
+window.onload = function () {
+    //fetchAndCreateProducts();
+    //getAllProducts();
+};
+
+
+
+//* Handle Dashboard content that show when navbar item clicked 
+document.addEventListener("DOMContentLoaded", function () {
+    const pageContent = document.getElementById("page-content");
+    const home = document.getElementById("home");
+    const products = document.getElementById("products");
+    const categories = document.getElementById("categories");
+    const orders = document.getElementById("orders");
+    const navItems = [home, products, categories, orders];
+
+    // Function to update content and active state
+    function updatePageContent(content, selectedItem) {
+        pageContent.innerHTML = content;
+        navItems.forEach(item => item?.classList.remove("active"));
+        selectedItem?.classList.add("active");
+    }
+
+    // Default Home page content on load
+    if (home) {
+        updatePageContent(getHomeContent(), home);
+    }
+
+    home?.addEventListener("click", function (event) {
+        event.preventDefault();
+        updatePageContent(getHomeContent(), home);
     });
+
+    products?.addEventListener("click", async function (event) {
+        event.preventDefault();
+        // Since getProductContent is async, await its result and then update the content
+        const content = await getProductContent();
+        updatePageContent(content, products);
+    });
+
+    categories?.addEventListener("click", function (event) {
+        event.preventDefault();
+        
+        updatePageContent(getCategoriesContent(), categories);
+    });
+
+    orders?.addEventListener("click", function (event) {
+        event.preventDefault();
+        updatePageContent(getOrdersContent(), orders);
+    });
+
+    // Function to return Home Page Content
+    function getHomeContent() {
+        return `
+        <div class="row">
+            <div class="col-sm-12 col-xl-9">
+                <section class="overview-container col-sm-12">
+                    <div class="overview-box">
+                        <div class="overview d-flex">
+                            <h2>Overview</h2>
+                            <select class="list-items">
+                                <option selected>All time</option>
+                                <option value="">Last Month</option>
+                                <option value="">Last Week</option>
+                                <option value="">Today</option>
+                            </select>
+                        </div>
+                        <div class="customers-incomes d-flex">
+                            <div class="customers col-5">
+                                <section class="customer-number">
+                                    <span>Customers</span>
+                                    <h4>10,243</h4>
+                                </section>
+                                <section>
+                                    <span class="customer-percentage">8%</span>
+                                </section>
+                            </div>
+                            <div class="incomes col-5">
+                                <section class="income-number">
+                                    <span>Income</span>
+                                    <h4>$33333333</h4>
+                                </section>
+                                <section class="income-percentage">
+                                    <span class="customer-percentage">8%</span>
+                                </section>
+                            </div>
+                        </div>
+                        <div class="admins">
+                            <h5 class="welcome-admins">
+                                Welcome to our <b>new online experience</b>
+                            </h5>
+                            <div class="admins-Images d-flex flex-wrap justify-content-evenly">
+                                ${generateAdminImages(4)}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="total-income-container col-sm-12">
+                    <div class="total-income-box">
+                        <div class="total-income d-flex">
+                            <h2>Total Income</h2>
+                            <select class="list-items">
+                                <option selected>All time</option>
+                                <option value="">Last Month</option>
+                                <option value="">Last Week</option>
+                                <option value="">Today</option>
+                            </select>
+                        </div>
+                        <canvas id="myChart" style="width: 100%; max-width: 700px"></canvas>
+                    </div>
+                </section>
+            </div>
+        </div>`;
+    }
+
+// Function to return Products in Page Content
+async function getProductContent() {
+    try {
+        // Fetch products asynchronously
+        const products = await getAllProducts();
+        
+        // Ensure that we have an array of products
+        if (!Array.isArray(products)) {
+            console.error("Expected an array of products, but got:", products);
+            return "<div>Error loading products.</div>";
+        }
+
+        // Generate product cards dynamically once the products are available
+        return `
+        <div class="container mt-4">
+            <h2 class="mb-4">Products</h2>
+            <div class="row">
+                ${generateProductCards(products)} <!-- Pass the products to generate cards -->
+            </div>
+        </div>`;
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        return "<div>Error loading products.</div>";
+    }
+}
+
+// Function to generate product cards dynamically
+function generateProductCards(products) {
+    return products.map(p => `
+        <div class="col-md-4 mb-4 product-card" id="product-${p.id}">
+            <div class="card shadow-sm">
+                <img src="${p.image}" class="card-img-top" alt="${p.title}">
+                <div class="card-body">
+                    <h5 class="card-title">${p.title}</h5>
+                    <p class="card-text">${p.description}</p>
+                    <p><strong>Category:</strong> ${p.category}</p>
+                    <p><strong>Stock:</strong> ${p.stock}</p>
+                    <p><strong>Price:</strong> ${p.price}</p>
+                    <button class="btn btn-warning" onclick="editProduct(${p.id})">Edit</button>
+                    <button class="btn btn-danger" onclick="deleteProduct(${p.id})">Delete</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
 }
 
 
 
+    
+    
 
+    // Function to return Categories in Page Content
+    function getCategoriesContent() {
+        return `getCategoriesContent`;
+    }
 
-// Ensure the fetchAndCreateProducts is called after the page loads
-window.onload = function () {
-    fetchAndCreateProducts();
-    getAllProducts();
-    getPopularProducts();
-};
+    // Function to return Categories in Page Content
+    function getOrdersContent() {
+        return `getOrdersContent`;
+    }
+
+    // Function to generate multiple admin images dynamically
+    function generateAdminImages(count) {
+        let images = "";
+        for (let i = 0; i < count; i++) {
+            images += `
+            <section>
+                <img width="100" height="100" src="https://img.icons8.com/bubbles/100/user.png" alt="user"/>
+                <span>Mostafa Mohamed</span>
+            </section>`;
+        }
+        return images;
+    }
+});
 
