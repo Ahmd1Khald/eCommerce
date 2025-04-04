@@ -18,30 +18,33 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Product Form Submit
-// const productForm = document.getElementById("productForm");
-// const errorMessage = document.getElementById("errorMessage");
+// // Product Form Submit
+const productForm = document.getElementById("productForm");
+const errorMessage = document.getElementById("errorMessage");
 
-// productForm.addEventListener("submit", function (event) {
-//     event.preventDefault();
+//! Add Product
+if(productForm)
+productForm.addEventListener("submit", function (event) {
+    event.preventDefault();
 
-//     // Get values from form
-//     const productName = document.getElementById("productName").value;
-//     const productCategory = document.getElementById("productCategory").value;
-//     const productPrice = parseFloat(document.getElementById("productPrice").value);
-//     const productDescription = document.getElementById("productDescription").value;
-//     const productImage = document.getElementById("productImage").value;
+    // Get values from form
+    const productName = document.getElementById("productName").value;
+    const productCategory = document.getElementById("productCategory").value;
+    const productPrice = parseFloat(document.getElementById("productPrice").value);
+    const productDescription = document.getElementById("productDescription").value;
+    const productImage = document.getElementById("productImage").value;
+    const stockQuantity = document.getElementById("stockQuantity").value;
 
-//     // Validate form data
-//     if (!productName || !productCategory || isNaN(productPrice) || !productDescription || !productImage) {
-//         errorMessage.textContent = "All fields are required.";
-//         return;
-//     } else {
-//         errorMessage.textContent = "";
-//     }
+    // Validate form data
+    if (!productName || !productCategory || isNaN(productPrice) || !productDescription || !productImage || !stockQuantity)  {
+        errorMessage.textContent = "All fields are required.";
+        return;
+    } else {
+        errorMessage.textContent = "";
+    }
 
-//     createProduct(productName, productCategory,productPrice, productDescription,productImage)
-// });
+    createProduct(productName, productCategory, productPrice, productDescription, productImage,stockQuantity)
+});
 
 // API URL for external product data
 // const apiUrl = 'https://fakestoreapi.com/products'; // Replace with your API URL
