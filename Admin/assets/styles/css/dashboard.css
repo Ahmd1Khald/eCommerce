@@ -28,8 +28,8 @@
 .leftNav {
   display: flex;
   justify-items: center;
-  justify-content: flex-end;
-  font-size: 30px;
+  justify-content: space-around;
+  font-size: 20px;
 }
 .leftNav > div {
   margin-left: 50px;
@@ -125,4 +125,8 @@
 .product,.type{
   font-size: 15px;
   line-height: 10px;
+}
+.addProductBtn>a,.updateProductBtn>a{
+  text-decoration: none;
+  color: #fff;
 }

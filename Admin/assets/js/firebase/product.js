@@ -270,7 +270,13 @@ async function getProductContent() {
 
 // Function to generate product cards dynamically
 function generateProductCards(products) {
-    return products.map(p => `
+    return products.map(p => {
+        // Escape single quotes in string values
+        const escapedTitle = p.title.replace(/'/g, "\\'");
+        const escapedCategory = p.category.replace(/'/g, "\\'");
+        const escapedDescription = p.description.replace(/'/g, "\\'");
+        
+        return `
         <div class="col-md-4 mb-4 product-card" id="product-${p.id}">
             <div class="card shadow-sm">
                 <img src="${p.image}" class="card-img-top" alt="${p.title}">
@@ -280,12 +286,13 @@ function generateProductCards(products) {
                     <p><strong>Category:</strong> ${p.category}</p>
                     <p><strong>Stock:</strong> ${p.stock}</p>
                     <p><strong>Price:</strong> ${p.price}</p>
-                    <button class="btn btn-warning" onclick="editProduct(${p.id})">Edit</button>
+                    <button class="btn btn-warning" onclick="editProductPage('${p.id}', '${escapedTitle}', ${p.price}, ${p.stock}, '${escapedCategory}', '${escapedDescription}')">Edit</button>
                     <button class="btn btn-danger" onclick="deleteProduct('${p.id}')">Delete</button>
                 </div>
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
     // Function to return Categories in Page Content
@@ -312,7 +319,6 @@ function generateProductCards(products) {
     }
 });
 
-
 // Make deleteProduct globally accessible
 window.deleteProduct = function(productId) {
     const productsRef = ref(database, `products/${productId}`);
@@ -329,3 +335,8 @@ window.deleteProduct = function(productId) {
     }
 };
 
+// Make editProductPage globally accessible
+window.editProductPage = function(productId, title, price, stock, category, description) {
+    const queryString = `?id=${encodeURIComponent(productId)}&title=${encodeURIComponent(title)}&price=${encodeURIComponent(price)}&stock=${encodeURIComponent(stock)}&category=${encodeURIComponent(category)}&description=${encodeURIComponent(description)}`;
+    window.location.href = `/Admin/assets/views/updateProductForm.html${queryString}`;
+};
