@@ -49,8 +49,10 @@ updateProductForm.addEventListener("submit", function (event) {
 
 // Function to update product in Firebase
 function updateProductInFirebase(productId, title, price, description, image, stock, category) {
+  console.log("productId  "+productId);
+  
   // Reference to the Firebase database
-  const productRef = ref(database, "products/" + productId);
+  const productRef = ref(database, `products/${productId}`);
   console.log(productRef);
 
   // Product data to update
@@ -97,6 +99,7 @@ console.log(productData);
 
 // Example usage: populate a form
 document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('productId').value = productData.id;
   document.getElementById('productName').value = productData.title;
   document.getElementById('productCategory').value = productData.category;
   document.getElementById('productPrice').value = productData.price;
