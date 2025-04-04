@@ -70,7 +70,7 @@ function updateProductInFirebase(productId, title, price, description, image, st
     .then(() => {
       alert("Product updated successfully!");
       // Optionally, reset the form or close the modal
-      updateProductForm.reset();
+      window.location.href = `/Admin/assets/views/dashboard.html`;
     })
     .catch((error) => {
       console.error("Error updating product:", error);

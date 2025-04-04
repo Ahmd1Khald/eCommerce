@@ -51,31 +51,31 @@ productForm.addEventListener("submit", function (event) {
 // console.log(data);
 
 // Fetch and Create Products in Firebase
-async function fetchAndCreateProducts() {
-    const productsRef = ref(database, "products");
+// async function fetchAndCreateProducts() {
+//     const productsRef = ref(database, "products");
 
-    // Check if products already exist in Firebase
-    try {
-        const snapshot = await get(productsRef);
-        if (snapshot.exists()) {
-            console.log("Products already exist in Firebase.");
-            return; // Skip fetching if data already exists
-        }
-        // If products don't exist, fetch them from the API
-        // console.log("Fetching products from API...");
-        // const response = await fetch(apiUrl);
-        // const products = await response.json();
+//     // Check if products already exist in Firebase
+//     try {
+//         const snapshot = await get(productsRef);
+//         if (snapshot.exists()) {
+//             console.log("Products already exist in Firebase.");
+//             return; // Skip fetching if data already exists
+//         }
+//         // If products don't exist, fetch them from the API
+//         // console.log("Fetching products from API...");
+//         const response = await fetch(apiUrl);
+//         const products = await response.json();
 
-        // Loop through the products data and send it to Firebase
-        data.forEach(product => {
-            const { title, category, price, description,image,stock } = product;
-            createProduct(title, category, price, description,image,stock);
-        });
+//         // Loop through the products data and send it to Firebase
+//         data.forEach(product => {
+//             const { title, category, price, description,image,stock } = product;
+//             createProduct(title, category, price, description,image,stock);
+//         });
 
-    } catch (error) {
-        console.log("Error fetching or checking products in Firebase: "+ error);
-    }
-}
+//     } catch (error) {
+//         console.log("Error fetching or checking products in Firebase: "+ error);
+//     }
+// }
 
 // Create a product in Firebase
 function createProduct(title, category, price, description,image, stock) {
@@ -98,8 +98,9 @@ function createProduct(title, category, price, description,image, stock) {
     // Save product data with unique ID to Firebase
     set(newProductRef, productData)
         .then(() => {
-            console.log("Product created successfully!");
-            //productForm.reset(); // Reset the form
+            alert("Product created successfully!");
+            
+            productForm.reset(); // Reset the form
         })
         .catch((error) => {
             console.error("Error creating product: ", error);
