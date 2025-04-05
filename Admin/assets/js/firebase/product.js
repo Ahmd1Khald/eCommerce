@@ -18,6 +18,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
+
+
+
+
+
 // // Product Form Submit
 const productForm = document.getElementById("productForm");
 const errorMessage = document.getElementById("errorMessage");
