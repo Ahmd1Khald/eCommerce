@@ -10,6 +10,8 @@ import {
   ref,
   set,
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+import { signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
 
 // Firebase configuration
 const firebaseConfig = {
@@ -127,4 +129,19 @@ console.log(adminData);
 
 
 document.getElementById("adminName").innerText = adminData.name;
+});
+
+
+//Sign Out
+document.getElementById("logoutBtn").addEventListener("click", (event) => {
+  event.preventDefault();
+  signOut(auth)
+    .then(() => {
+      confirm("Are you sure want to Log out?");
+      window.location.replace("/Admin/assets/views/login.html");
+    })
+    .catch((error) => {
+      console.error("Logout error:", error);
+      alert("Error logging out. Please try again.");
+    });
 });

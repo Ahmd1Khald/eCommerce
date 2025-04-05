@@ -66,7 +66,7 @@ function checkRoleAddPassAdminData(id){
           // Step 4: Navigate based on the role
           if (userData.role === "admin") {
             const queryString = `?id=${encodeURIComponent(userData.uid)}&name=${encodeURIComponent(userData.name)}&email=${encodeURIComponent(userData.email)}`;
-            window.location.href = `/Admin/assets/views/dashboard.html?admin=${queryString}`;
+            window.location.replace(`/Admin/assets/views/dashboard.html?admin=${queryString}`);
           } 
       }else {
         console.log("No user data found in the database.");
