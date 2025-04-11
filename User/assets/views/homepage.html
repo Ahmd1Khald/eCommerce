@@ -23,9 +23,17 @@
             </button>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#" class="active">Home</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/wishlist">
+                    <i class="fas fa-heart"></i> Wishlist
+                    <span class="icon-badge" id="wishlistCount">0</span>
+                </a></li>
                 <li><a href="#">Contact</a></li>
                 <li><a href="#">About</a></li>
-                <li><a href="/User/assets/views/registration.html">Sign Up</a></li>
+                <li><a href="/registration">Sign Up</a></li>
+                <li><a href="#" id="cartLink">
+                    <i class="fas fa-shopping-cart"></i> Cart
+                </a></li>
             </ul>
             <div class="nav-right">
                 <div class="search-container">
@@ -33,9 +41,17 @@
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
                 <div class="nav-icons">
-                    <i class="fa-regular fa-heart"></i>
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <i class="fa-solid fa-user"></i>
+                    <a href="/wishlist" class="nav-icon-link">
+                        <i class="fa-solid fa-heart"></i>
+                        <span class="icon-badge" id="wishlistCount">0</span>
+                    </a>
+                    <a href="#" id="cartIconLink" class="nav-icon-link">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="icon-badge" id="cartCount">0</span>
+                    </a>
+                    <a href="#" class="nav-icon-link">
+                        <i class="fa-solid fa-user"></i>
+                    </a>
                 </div>
             </div>
         </div>

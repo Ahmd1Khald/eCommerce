@@ -140,18 +140,48 @@ header {
 .nav-icons {
     display: flex;
     gap: 15px;
-    margin: 5px 0;
+    align-items: center;
 }
 
 .nav-icons i {
     font-size: 20px;
-    color: #333;
     cursor: pointer;
     transition: color 0.3s;
 }
 
 .nav-icons i:hover {
     color: #450fc2;
+}
+
+/* Nav Icon Links */
+.nav-icon-link {
+    position: relative;
+    color: #333;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+}
+
+.nav-icon-link:hover {
+    color: #450fc2;
+}
+
+.icon-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #e02525;
+    color: white;
+    font-size: 12px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
 }
 
 /* Main Content Layout */

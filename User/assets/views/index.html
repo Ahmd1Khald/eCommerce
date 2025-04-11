@@ -10,7 +10,19 @@
     <link rel="stylesheet" href="../styles/css/style.css">
     <link rel="stylesheet" href="../styles/css/all.min.css">
     <link rel="stylesheet" href="../styles/bootstrap-5.3.3-dist/css/bootstrap.min.css">
-</head>
+    <style>
+    .wishlist-icon {
+    color: black; /* Dark color */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.wishlist-icon.active {
+    color: red; /* Changes to red when clicked */
+}
+
+    </style>
+  </head>
 <body>
   <div class="top-bar">
     <p>Summer Sale For All Swim Suits And Free Express Delivery - OFF 50%! <a href="#">Shop Now</a></p>
@@ -27,6 +39,9 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="products.html">Products</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Contact</a>
@@ -48,6 +63,7 @@
             </form>  
             <div class="nav-icons ms-4">
               <a style="color: black; position: relative;" href="./cart.html"><i class="fa-solid fa-cart-shopping ps-1"></i><span id="cartbadge" style="display: none;" class="badge">5</span></a>
+              <a style="color: black;" href="./wishlist.html"> <i class="fa-solid fa-heart wishlist-icon ps-1 "></i></a>
               <a style="color: black;" href="./UserAccount.html"> <i class="fa-solid fa-user ps-1"></i></a>
               
              

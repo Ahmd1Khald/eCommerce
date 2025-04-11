@@ -1,21 +1,41 @@
 // Function to load content dynamically
-async function loadContent(view) {
-    const appDiv = document.getElementById("app");
-
-    try {
-        // Ensure view names are formatted correctly
-        const formattedView = view.toLowerCase().trim();
-        
-        // Fetch the corresponding HTML file
-        const response = await fetch(`assets/views/${formattedView}.html`);
-        if (!response.ok) throw new Error("Page not found");
-
-        const content = await response.text();
-        appDiv.innerHTML = content;
-    } catch (error) {
-        console.error("Error loading page:", error);
-        appDiv.innerHTML = "<h2 class='text-danger'>Page Not Found</h2>";
-    }
+function loadContent(view) {
+    const contentContainer = document.getElementById('content');
+    const viewPath = view === '/' ? '/homepage' : view;
+    
+    fetch(`/User/assets/views${viewPath}.html`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Page not found');
+            }
+            return response.text();
+        })
+        .then(html => {
+            contentContainer.innerHTML = html;
+            
+            // Execute scripts in the loaded content
+            const scripts = contentContainer.getElementsByTagName('script');
+            for (let script of scripts) {
+                const newScript = document.createElement('script');
+                Array.from(script.attributes).forEach(attr => {
+                    newScript.setAttribute(attr.name, attr.value);
+                });
+                newScript.textContent = script.textContent;
+                script.parentNode.replaceChild(newScript, script);
+            }
+            
+            // Update active navigation link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === view) {
+                    link.classList.add('active');
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error loading page:', error);
+            contentContainer.innerHTML = '<div class="error-message">Page not found</div>';
+        });
 }
 
 // Function to handle navigation

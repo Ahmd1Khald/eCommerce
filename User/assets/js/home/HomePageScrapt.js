@@ -18,6 +18,20 @@ document.querySelectorAll('.nav-links a').forEach(item => {
     });
 });
 
+// Wishlist Functionality
+const updateWishlistCount = () => {
+    const wishlistCounts = document.querySelectorAll('#wishlistCount');
+    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    wishlistCounts.forEach(count => {
+        count.textContent = wishlist.length;
+    });
+};
+
+// Initialize wishlist count
+document.addEventListener('DOMContentLoaded', () => {
+    updateWishlistCount();
+});
+
 // Shopping Cart Functionality
 let cartItems = [];
 let isCartOpen = false;
@@ -476,4 +490,31 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('rightArrow3')?.addEventListener('click', () => scrollProducts('right', 'productsContainer3'));
     document.getElementById('leftArrow4')?.addEventListener('click', () => scrollProducts('left', 'productsContainer4'));
     document.getElementById('rightArrow4')?.addEventListener('click', () => scrollProducts('right', 'productsContainer4'));
+});
+
+// Handle navigation links
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        // Only handle links that start with '/'
+        if (this.getAttribute('href').startsWith('/')) {
+            e.preventDefault();
+            
+            // Get the path from the href
+            const path = this.getAttribute('href');
+            
+            // Use the router's navigateTo function
+            navigateTo(path);
+            
+            // Update active state
+            document.querySelectorAll('.nav-links a').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        }
+    });
+});
+
+// Handle view all buttons
+document.querySelectorAll('.view-all').forEach(button => {
+    button.addEventListener('click', function() {
+        navigateTo('/products');
+    });
 });
