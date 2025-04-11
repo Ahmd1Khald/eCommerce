@@ -227,30 +227,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div class="overview-box">
                         <div class="overview d-flex">
                             <h2>Overview</h2>
-                            <select class="list-items">
-                                <option selected>All time</option>
-                                <option value="">Last Month</option>
-                                <option value="">Last Week</option>
-                                <option value="">Today</option>
-                            </select>
                         </div>
                         <div class="customers-incomes d-flex">
                             <div class="customers col-5">
                                 <section class="customer-number">
                                     <span>Customers</span>
                                     <h4>10,243</h4>
-                                </section>
-                                <section>
-                                    <span class="customer-percentage">8%</span>
-                                </section>
-                            </div>
-                            <div class="incomes col-5">
-                                <section class="income-number">
-                                    <span>Income</span>
-                                    <h4>$33333333</h4>
-                                </section>
-                                <section class="income-percentage">
-                                    <span class="customer-percentage">8%</span>
                                 </section>
                             </div>
                         </div>
@@ -360,7 +342,7 @@ async function getOrdersContent() {
         // Generate product cards dynamically once the orders are available
         return `
         <div class="container mt-4">
-            <h2 class="mb-4">orders</h2>
+            <h2 class="mb-4">Customer Orders</h2>
             <div class="row">
                 ${generateOrderCards(orders,productsMap)} <!-- Pass the orders to generate cards -->
             </div>

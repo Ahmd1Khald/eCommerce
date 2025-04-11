@@ -65,7 +65,7 @@ export function getAllOrders() {
 // create order when click btn
 document.getElementById("createOrderBtn").addEventListener("click", function(event) {
     event.preventDefault();
-    // createOrder("userID", "productId", 10, "pending", "feedBack",Date.now());
+    createOrder("FZrA37lVTHOR3LWrqYX8P9nAbtP2", "-ONYWX2W9CUfjcLiaI7f", 5, "pending", "feedBack",Date.now());
     // updateOrderStatus("-ON9eaOiMCi4URxF2SP6","refuse");
 });
 
@@ -110,7 +110,7 @@ window.saveOrderChange = function(orderId) {
           </div>
           <div class="card-body">
             <p><strong>Quantity:</strong> ${order.quantity}</p>
-  
+            <p><strong>Total Price:</strong> ${order.quantity*product.price}</p>
             <div class="form-group">
               <label for="status-${order.id}"><strong>Status:</strong></label>
               <select id="status-${order.id}" class="form-control" data-order-id="${order.id}">
