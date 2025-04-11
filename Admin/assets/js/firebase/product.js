@@ -23,6 +23,7 @@ const productForm = document.getElementById("productForm");
 const errorMessage = document.getElementById("errorMessage");
 
 import { getAllOrders, generateOrderCards } from './orders.js'; 
+import { countNormalUsers, countAdminUsers } from './home.js'; 
 
 
 //! Add Product
@@ -174,7 +175,7 @@ window.onload = function () {
 
 //* Handle Dashboard content that show when navbar item clicked 
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     const pageContent = document.getElementById("page-content");
     const home = document.getElementById("home");
     const products = document.getElementById("products");
@@ -189,15 +190,29 @@ document.addEventListener("DOMContentLoaded", function () {
         selectedItem?.classList.add("active");
     }
 
-    // Default Home page content on load
-    if (home) {
-        updatePageContent(getHomeContent(), home);
+    if(home){
+        try {
+            let customerNum = await countNormalUsers();
+            let adminNum = await countAdminUsers();
+            let content = await getHomeContent(customerNum??0, adminNum??0); // Await the content
+            updatePageContent(content, home); // Pass the resolved content
+        } catch (error) {
+            console.error("Error updating home content:", error);
+        }
     }
 
-    home?.addEventListener("click", function (event) {
-        event.preventDefault();
-        updatePageContent(getHomeContent(), home);
-    });
+// Event listener for the home button
+home?.addEventListener("click", async function (event) {
+    event.preventDefault();
+    try {
+        let customerNum = await countNormalUsers();
+        let adminNum = await countAdminUsers();
+        let content = await getHomeContent(customerNum??0, adminNum??0); // Await the content
+        updatePageContent(content, home); // Pass the resolved content
+    } catch (error) {
+        console.error("Error updating home content:", error);
+    }
+});
 
     products?.addEventListener("click", async function (event) {
         event.preventDefault();
@@ -219,7 +234,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Function to return Home Page Content
-    function getHomeContent() {
+    async function getHomeContent(customerNum,adminNum) {
         return `
         <div class="row">
             <div class="col-sm-12 col-xl-9">
@@ -232,9 +247,19 @@ document.addEventListener("DOMContentLoaded", function () {
                             <div class="customers col-5">
                                 <section class="customer-number">
                                     <i class="fa-duotone fa-solid fa-users"></i>
-                                    <span>Number of Customers is <strong>10,243</strong></span>
+                                    <span>Number of Customers is <strong id="customers-numbers">${customerNum}</strong></span>
                                 </section>
                             </div>
+                            <br>
+                        </div>
+                        <div class="customers-incomes d-flex">
+                            <div class="customers col-5">
+                                <section class="customer-number">
+                                    <i class="fa-solid fa-user-tie"></i>
+                                    <span>Number of Admin is <strong id="admins-numbers">${adminNum}</strong></span>
+                                </section>
+                            </div>
+                            <br>
                         </div>
                     </div>
                 </section>

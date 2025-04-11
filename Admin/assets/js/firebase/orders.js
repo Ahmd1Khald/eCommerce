@@ -63,11 +63,11 @@ export function getAllOrders() {
 }
 
 // create order when click btn
-document.getElementById("createOrderBtn").addEventListener("click", function(event) {
-    event.preventDefault();
-    createOrder("FZrA37lVTHOR3LWrqYX8P9nAbtP2", "-ONYWX2W9CUfjcLiaI7f", 5, "pending", "feedBack",Date.now());
-    // updateOrderStatus("-ON9eaOiMCi4URxF2SP6","refuse");
-});
+// document.getElementById("createOrderBtn").addEventListener("click", function(event) {
+//     event.preventDefault();
+//     createOrder("FZrA37lVTHOR3LWrqYX8P9nAbtP2", "-ONYWX2W9CUfjcLiaI7f", 5, "pending", "feedBack",Date.now());
+//     // updateOrderStatus("-ON9eaOiMCi4URxF2SP6","refuse");
+// });
 
 
 // Define the saveOrderChange function globally
