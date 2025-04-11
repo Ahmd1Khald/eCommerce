@@ -22,7 +22,7 @@ const database = getDatabase(app);
 const productForm = document.getElementById("productForm");
 const errorMessage = document.getElementById("errorMessage");
 
-import { getAllOrders } from './orders.js'; 
+import { getAllOrders, generateOrderCards } from './orders.js'; 
 
 
 //! Add Product
@@ -132,6 +132,38 @@ function getAllProducts() {
             return []; // Return an empty array in case of error
         });
 }
+
+// Fetch products map to user in view order
+export async function fetchProductsMap() {
+    const db = getDatabase();
+    const dbRef = ref(db);
+
+    try {
+        const snapshot = await get(child(dbRef, 'products'));
+
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+
+            // Convert to productsMap
+            const productsMap = {};
+            for (const productId in data) {
+                productsMap[productId] = {
+                    ...data[productId],
+                    id: productId // optional: include ID for future use
+                };
+            }
+
+            return productsMap;
+        } else {
+            console.log("No products found.");
+            return {};
+        }
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        return {};
+    }
+}
+
 // Ensure the fetchAndCreateProducts is called after the page loads
 window.onload = function () {
     //fetchAndCreateProducts();
@@ -180,9 +212,10 @@ document.addEventListener("DOMContentLoaded", function () {
         updatePageContent(getCategoriesContent(), categories);
     });
 
-    orders?.addEventListener("click", function (event) {
+    orders?.addEventListener("click", async function (event) {
         event.preventDefault();
-        updatePageContent(getOrdersContent(), orders);
+        const content = await getOrdersContent(); // wait for the Promise to resolve
+        updatePageContent(content, orders);
     });
 
     // Function to return Home Page Content
@@ -312,8 +345,10 @@ async function getOrdersContent() {
     try {
         // Fetch orders asynchronously
         const orders = await getAllOrders();
+        const productsMap = await fetchProductsMap();
 
-        console.log(orders);
+        console.log("Orders => "+orders);
+        console.log("productsMap => "+productsMap);
         
         
         // Ensure that we have an array of orders
@@ -327,7 +362,7 @@ async function getOrdersContent() {
         <div class="container mt-4">
             <h2 class="mb-4">orders</h2>
             <div class="row">
-                ${generateProductCards(orders)} <!-- Pass the orders to generate cards -->
+                ${generateOrderCards(orders,productsMap)} <!-- Pass the orders to generate cards -->
             </div>
         </div>`;
     } catch (error) {
