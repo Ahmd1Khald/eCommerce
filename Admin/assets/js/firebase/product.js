@@ -18,14 +18,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-
-
-
-
-
-// // Product Form Submit
+// Product Form Submit
 const productForm = document.getElementById("productForm");
 const errorMessage = document.getElementById("errorMessage");
+
+import { getAllOrders } from './orders.js'; 
+
 
 //! Add Product
 if(productForm)
@@ -310,8 +308,32 @@ function generateProductCards(products) {
     }
 
     // Function to return Categories in Page Content
-    function getOrdersContent() {
-        return `getOrdersContent`;
+async function getOrdersContent() {
+    try {
+        // Fetch orders asynchronously
+        const orders = await getAllOrders();
+
+        console.log(orders);
+        
+        
+        // Ensure that we have an array of orders
+        if (!Array.isArray(orders)) {
+            console.error("Expected an array of orders, but got:", orders);
+            return "<div>Error loading orders.</div>";
+        }
+
+        // Generate product cards dynamically once the orders are available
+        return `
+        <div class="container mt-4">
+            <h2 class="mb-4">orders</h2>
+            <div class="row">
+                ${generateProductCards(orders)} <!-- Pass the orders to generate cards -->
+            </div>
+        </div>`;
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+        return "<div>Error loading orders.</div>";
+    }
     }
 
     // Function to generate multiple admin images dynamically

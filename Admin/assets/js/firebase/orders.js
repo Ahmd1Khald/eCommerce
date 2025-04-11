@@ -20,12 +20,10 @@ const database = getDatabase(app);
 
 
 // Create a Order in Firebase
-// ... your Firebase init code
-
-function createOrder(productId, quantity, status, feedBack) {
+function createOrder(userId, productId, quantity, status, feedBack, time) {
     const ordersRef = ref(database, "Orders");
 
-    const OrderData = { productId, quantity, status, feedBack };
+    const OrderData = {userId, productId, quantity, status, feedBack, time };
 
     const newOrderRef = push(ordersRef);
 
@@ -41,7 +39,8 @@ function createOrder(productId, quantity, status, feedBack) {
         });
 }
 
-function getAllOrders() {
+// Fetch all orders from firebase
+export function getAllOrders() {
     const dbRef = ref(database);
     return get(child(dbRef, "Orders")) // Notice: "Orders" with capital 'O'
         .then((snapshot) => {
@@ -64,11 +63,12 @@ function getAllOrders() {
 // create order when click btn
 document.getElementById("createOrderBtn").addEventListener("click", function(event) {
     event.preventDefault();
-    // createOrder("productId", 10, "pending", "feedBack");
+    // createOrder("userID", "productId", 10, "pending", "feedBack",Date.now());
     // updateOrderStatus("-ON9eaOiMCi4URxF2SP6","refuse");
 });
 
 
+// Change order status
 function updateOrderStatus(orderId, newStatus) {
     const orderRef = ref(database, `Orders/${orderId}`);
   
@@ -81,3 +81,30 @@ function updateOrderStatus(orderId, newStatus) {
         console.error("Error updating status:", error);
       });
   }
+
+  // Function to generate order cards dynamically
+export function generateOrderCards(orders) {
+    return orders.map(p => {
+        // Escape single quotes in string values
+        const escapedTitle = p.title.replace(/'/g, "\\'");
+        const escapedCategory = p.category.replace(/'/g, "\\'");
+        const escapedDescription = p.description.replace(/'/g, "\\'");
+        
+        return `
+        <div class="col-md-4 mb-4 product-card" id="product-${p.id}">
+            <div class="card shadow-sm">
+                <img src="${p.image}" class="card-img-top" alt="${p.title}">
+                <div class="card-body">
+                    <h5 class="card-title">${p.title}</h5>
+                    <p class="card-text">${p.description}</p>
+                    <p><strong>Category:</strong> ${p.category}</p>
+                    <p><strong>Stock:</strong> ${p.stock}</p>
+                    <p><strong>Price:</strong> ${p.price}</p>
+                    <button class="btn btn-warning" onclick="editProductPage('${p.id}', '${escapedTitle}', ${p.price}, ${p.stock}, '${escapedCategory}', '${escapedDescription}')">Edit</button>
+                    <button class="btn btn-danger" onclick="deleteProduct('${p.id}')">Delete</button>
+                </div>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
