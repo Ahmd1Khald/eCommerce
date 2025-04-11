@@ -231,33 +231,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         <div class="customers-incomes d-flex">
                             <div class="customers col-5">
                                 <section class="customer-number">
-                                    <span>Customers</span>
-                                    <h4>10,243</h4>
+                                    <i class="fa-duotone fa-solid fa-users"></i>
+                                    <span>Number of Customers is <strong>10,243</strong></span>
                                 </section>
                             </div>
                         </div>
-                        <div class="admins">
-                            <h5 class="welcome-admins">
-                                Welcome to our <b>new online experience</b>
-                            </h5>
-                            <div class="admins-Images d-flex flex-wrap justify-content-evenly">
-                                ${generateAdminImages(4)}
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section class="total-income-container col-sm-12">
-                    <div class="total-income-box">
-                        <div class="total-income d-flex">
-                            <h2>Total Income</h2>
-                            <select class="list-items">
-                                <option selected>All time</option>
-                                <option value="">Last Month</option>
-                                <option value="">Last Week</option>
-                                <option value="">Today</option>
-                            </select>
-                        </div>
-                        <canvas id="myChart" style="width: 100%; max-width: 700px"></canvas>
                     </div>
                 </section>
             </div>
@@ -351,19 +329,6 @@ async function getOrdersContent() {
         console.error("Error fetching orders:", error);
         return "<div>Error loading orders.</div>";
     }
-    }
-
-    // Function to generate multiple admin images dynamically
-    function generateAdminImages(count) {
-        let images = "";
-        for (let i = 0; i < count; i++) {
-            images += `
-            <section>
-                <img width="100" height="100" src="https://img.icons8.com/bubbles/100/user.png" alt="user"/>
-                <span>Mostafa Mohamed</span>
-            </section>`;
-        }
-        return images;
     }
 });
 
