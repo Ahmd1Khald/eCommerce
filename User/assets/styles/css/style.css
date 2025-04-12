@@ -251,3 +251,40 @@ ul li{
     text-align: center;
     font-weight: bold;
 }
+/* user log out and orders in navbar */
+.orders_and_Logout{
+    position: relative;
+    display: inline-block;
+}
+.dropDownList{
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: -30px;
+    background-color: white;
+    border: 1px solid #ccc;
+    min-width: 150px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    z-index: 100;
+}
+
+.dropDownList a {
+    width: 100%;
+    display: block;
+    padding: 10px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    text-decoration: none;
+    color: #000;
+  }
+
+  .dropDownList a:hover {
+    background-color: #f2f2f2;
+  }
+  
+  .orders_and_Logout:hover .dropDownList {
+    display: block;
+  }

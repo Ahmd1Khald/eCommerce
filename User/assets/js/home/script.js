@@ -102,6 +102,23 @@ function AddToCart(event){
     // console.log(cartItemImg.src);
     // document.getElementById("cartItems").appendChild(ss);
 }
+
+var wishlistCounter=0;
+function AddToCart(event){
+    
+    debugger;
+    var ss=document.getElementById("cartbadge");
+    ss.style.display="block";
+    ss.textContent=cartCounter+1;
+    cartCounter++;
+    //! كنت عايز اعرض بيانات الحاجه الي اتضافت في صفحه ال cart بس لازم local storage
+    // var element=document.getElementById(event.target.parentElement.id) 
+    // console.log(element.id);
+    // var cartItemImg=document.createElement("img");
+    // cartItemImg.src=element.children[0].children[0].src;
+    // console.log(cartItemImg.src);
+    // document.getElementById("cartItems").appendChild(ss);
+}
 ///////////////////////////////////////////////////flash sale
 const updateCountdown = () => {
     const days = document.getElementById('days');
@@ -137,3 +154,62 @@ const updateCountdown = () => {
 };
 
 setInterval(updateCountdown, 1000);
+/////////////////////////// favorite product
+
+
+    // var myfavoriteItemArray=[];
+    // var myfavoriteItem=document.getElementById("favoriteItem");
+    // // var favButtons =document.querySelectorAll(".fav-btn");
+    // myfavoriteItem.addEventListener("click",function(){
+    //     console.log("My Favoritr Item");
+    //     if(myfavoriteItem.style.color=="black"){
+    //         myfavoriteItemArray.push(myfavoriteItem.parentNode);
+    //         console.log("SASA1");
+    //         myfavoriteItem.style.color="red";
+    //         // localStorage.setItem("key",myfavoriteItem.parentNode.children[1].textContent);
+    //         localStorage.setItem("favoriteItems",JSON.stringify(myfavoriteItemArray));
+    //     }
+    //     else {
+    //         console.log("SASA2")
+    //         myfavoriteItem.style.color="black";
+    //         console.log(JSON.parse( localStorage.getItem("favoriteItems")));
+
+            
+    //     }
+        
+    // })
+
+    function addToFavorites(event) {
+        var element=document.getElementById("favoriteElement");
+        // نمسك العنصر الأب (اللي هو .product)
+        let productDiv = event.currentTarget.closest(".product");
+      
+        // نجيب البيانات من الأطفال children
+        let name = productDiv.querySelector(".name").textContent;
+        let price = productDiv.querySelector(".price").textContent;
+        let image = productDiv.querySelector(".image").src;
+        let id = productDiv.id;
+        let product = {
+            id,
+            name,
+            price,
+            image
+          };
+          let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+          if (!favorites.some(item => item.id === product.id)) {
+            favorites.push(product);
+            localStorage.setItem("favorites", JSON.stringify(favorites));
+            element.style.color="red";
+            alert("Add to Favorite❤️");
+        } else {
+            alert("This Element Already in Favorite");
+          }
+        }
+        /////////////////////Cart icon
+        // var cart=document.getElementById("cartCount");
+        // if(cart.textContent==0){
+        //     cart.style.display="none";
+        // }
+        // else {cart.style.display="block";}
+
+
