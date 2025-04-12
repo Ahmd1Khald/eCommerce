@@ -325,36 +325,61 @@ function generateProductCards(products) {
         return `getCategoriesContent`;
     }
 
-    // Function to return Categories in Page Content
-async function getOrdersContent() {
-    try {
-        // Fetch orders asynchronously
-        const orders = await getAllOrders();
-        const productsMap = await fetchProductsMap();
+    // Function to generate product list for an order
+function generateOrderProductList(products, productsMap) {
+    if (!Array.isArray(products) || products.length === 0) {
+        return "<p>No products in this order.</p>";
+    }
 
-        console.log("Orders => "+orders);
-        console.log("productsMap => "+productsMap);
-        
-        
-        // Ensure that we have an array of orders
-        if (!Array.isArray(orders)) {
-            console.error("Expected an array of orders, but got:", orders);
+    return `
+        <ul class="list-group mb-3">
+            ${products.map(prod => {
+                const productInfo = productsMap[prod.productId];
+                return `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${productInfo ? productInfo.title : "Unknown Product"}
+                        <span class="badge bg-primary rounded-pill">Qty: ${prod.quantity}</span>
+                    </li>
+                `;
+            }).join('')}
+        </ul>
+    `;
+}
+    
+
+    // Function to return Categories in Page Content
+    async function getOrdersContent() {
+        try {
+            const orders = await getAllOrders();
+            const productsMap = await fetchProductsMap();
+
+            console.log(orders+"orders");
+            console.log(productsMap+"productsMap");
+            
+    
+            console.log("Orders => ", orders);
+            console.log("productsMap => ", productsMap);
+    
+            if (!Array.isArray(orders)) {
+                console.error("Expected an array of orders, but got:", orders);
+                return "<div>Error loading orders.</div>";
+            }
+    
+            return `
+                <div class="container mt-4">
+                    <h2 class="mb-4">Customers Orders</h2>
+                    <div class="row">
+                        ${generateOrderCards(orders, productsMap)}
+                    </div>
+                </div>`;
+        } catch (error) {
+            console.error("Error fetching orders:", error);
             return "<div>Error loading orders.</div>";
         }
-
-        // Generate product cards dynamically once the orders are available
-        return `
-        <div class="container mt-4">
-            <h2 class="mb-4">Customer Orders</h2>
-            <div class="row">
-                ${generateOrderCards(orders,productsMap)} <!-- Pass the orders to generate cards -->
-            </div>
-        </div>`;
-    } catch (error) {
-        console.error("Error fetching orders:", error);
-        return "<div>Error loading orders.</div>";
     }
-    }
+    
+    
+    
 });
 
 // Make deleteProduct globally accessible

@@ -18,11 +18,33 @@ const firebaseConfig = {
 document.addEventListener('DOMContentLoaded',async function(){
     let customerNum = await countNormalUsers();
     let adminNum = await countAdminUsers();
+    // await getUserById("FZrA37lVTHOR3LWrqYX8P9nAbtP2");
 
     document.getElementById('customers-numbers').innerText = customerNum;
     document.getElementById('admins-numbers').innerText = adminNum;
 }
 );
+
+export async function getUserById(id) {
+  const db = getDatabase();
+  const userRef = ref(db, `users/${id}`);  // target the specific user directly
+
+  try {
+      const snapshot = await get(userRef);
+
+      if (snapshot.exists()) {
+          const userData = snapshot.val();
+          console.log("Fetched User:", userData.name);
+          return userData.name;  // returns the full user object: { name, email, role, uid }
+      } else {
+          console.warn(`User with ID ${id} not found.`);
+          return null;
+      }
+  } catch (error) {
+      console.error("Error fetching user by ID:", error);
+      return null;
+  }
+}
 
 export async function countNormalUsers() {
     const db = getDatabase();
