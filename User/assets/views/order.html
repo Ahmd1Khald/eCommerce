@@ -3,9 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/User/assets/styles/bootstrap-5.3.3-dist/css/bootstrap.css">
     <title>Orders</title>
 </head>
 <body>
-    
+    <div class="container mt-4">
+        <h2 class="mb-4">My Orders</h2>
+        <div class="row">
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                  <h5>Product: ${product.title || "Unknown"}</h5>
+                </div>
+                <div class="card-body">
+                  <p><strong>Quantity:</strong> ${order.quantity}</p>
+                  <p><strong>Total Price:</strong> ${order.quantity*product.price}</p>
+                  <p><strong>Order Status:</strong> ${order.status}</p>
+                </div>
+              </div>
+        </div>
+    </div>
+
+    <script src="../styles/bootstrap-5.3.3-dist/js/bootstrap.js"></script>
+    <script src="../js/home/order.js"></script>
 </body>
 </html>
