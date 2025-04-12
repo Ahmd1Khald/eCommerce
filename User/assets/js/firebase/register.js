@@ -94,6 +94,7 @@ function storedUserData(name, email, user, role) {
   })
     .then(() => {
       alert("Data Stored Successfully!");
+      window.location.replace(`/User/assets/views/index.html`);
     })
     .catch((error) => {
       console.error("Database Error:", error);

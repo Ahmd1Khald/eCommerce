@@ -1,4 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { get, child } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -45,8 +46,8 @@ document
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        alert("User logged in successfully!");
         console.log("Logged in user: ", user);
+        checkRoleAddPassUserData(user.uid);
       })
       .catch((error) => {
         console.error("Auth Error:", error);
@@ -66,7 +67,8 @@ document
       .then((result) => {
         const user = result.user;
         console.log("User logged in: ", user);
-        alert("User logged in successfully!");
+        
+        checkRoleAddPassUserData(user.uid);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -75,6 +77,33 @@ document
         alert(errorMessage);
       });
   });
+
+  function checkRoleAddPassUserData(id){
+    const database = getDatabase();
+    const userRef = ref(database, `users/${id}`);
+
+    get(userRef)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          console.log("User Role:", userData.role);
+          // Step 4: Navigate based on the role
+          if (userData.role === "user") {
+            alert("User logged in successfully!");
+            const queryString = `?id=${encodeURIComponent(userData.uid)}&name=${encodeURIComponent(userData.name)}&email=${encodeURIComponent(userData.email)}`;
+            window.location.replace(`/User/assets/views/index.html?admin=${queryString}`);
+          } 
+      }else {
+        console.log("No user data found in the database.");
+        alert("User data not found. Please contact support.");
+        // Optionally redirect to a default screen or log the user out
+      }
+    })
+      .catch((error) => {
+        console.error("Error fetching user role:", error);
+        alert("Error fetching user role. Please try again.");
+      });
+}
 
 // // User Forgot Password
 // document.getElementById("forgotPasswordBtn").addEventListener("click", function (event) {

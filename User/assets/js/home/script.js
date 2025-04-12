@@ -21,7 +21,8 @@ else {
 }
 //////setinterval
 var myDiv=document.getElementById("imageDiv");
- var images=["../../resourses/phone1.jpg","../../resourses/phone2.jpg","../../resourses/phone3.jpg"]
+ var images=["/User/resources/images/tablet1.jpg",
+    "/User/resources/images/labtop1.jpg","/User/resources/images/phone2.jpg"]
 var image=document.createElement("img");
 image.src=images[0];
 image.style.width="50%";
@@ -120,40 +121,40 @@ function AddToCart(event){
     // document.getElementById("cartItems").appendChild(ss);
 }
 ///////////////////////////////////////////////////flash sale
-const updateCountdown = () => {
-    const days = document.getElementById('days');
-    const hours = document.getElementById('hours');
-    const minutes = document.getElementById('minutes');
-    const seconds = document.getElementById('seconds');
+// const updateCountdown = () => {
+//     const days = document.getElementById('days');
+//     const hours = document.getElementById('hours');
+//     const minutes = document.getElementById('minutes');
+//     const seconds = document.getElementById('seconds');
     
-    let dayValue = parseInt(days.textContent);
-    let hourValue = parseInt(hours.textContent);
-    let minuteValue = parseInt(minutes.textContent);
-    let secondValue = parseInt(seconds.textContent);
-    secondValue--;
+//     let dayValue = parseInt(days.textContent);
+//     let hourValue = parseInt(hours.textContent);
+//     let minuteValue = parseInt(minutes.textContent);
+//     let secondValue = parseInt(seconds.textContent);
+//     secondValue--;
     
-    if (secondValue < 0) {
-        secondValue = 59;
-        minuteValue--;
+//     if (secondValue < 0) {
+//         secondValue = 59;
+//         minuteValue--;
         
-        if (minuteValue < 0) {
-            minuteValue = 59;
-            hourValue--;
+//         if (minuteValue < 0) {
+//             minuteValue = 59;
+//             hourValue--;
             
-            if (hourValue < 0) {
-                hourValue = 23;
-                dayValue--;
-            }
-        }
-    }
+//             if (hourValue < 0) {
+//                 hourValue = 23;
+//                 dayValue--;
+//             }
+//         }
+//     }
     
-    days.textContent = dayValue.toString().padStart(2, '0');
-    hours.textContent = hourValue.toString().padStart(2, '0');
-    minutes.textContent = minuteValue.toString().padStart(2, '0');
-    seconds.textContent = secondValue.toString().padStart(2, '0');
-};
+//     days.textContent = dayValue.toString().padStart(2, '0');
+//     hours.textContent = hourValue.toString().padStart(2, '0');
+//     minutes.textContent = minuteValue.toString().padStart(2, '0');
+//     seconds.textContent = secondValue.toString().padStart(2, '0');
+// };
 
-setInterval(updateCountdown, 1000);
+// setInterval(updateCountdown, 1000);
 /////////////////////////// favorite product
 
 
