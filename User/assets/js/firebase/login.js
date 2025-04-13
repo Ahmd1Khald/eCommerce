@@ -93,7 +93,9 @@ document
             alert("User logged in successfully!");
             const queryString = `id=${encodeURIComponent(userData.uid)}&name=${encodeURIComponent(userData.name)}&email=${encodeURIComponent(userData.email)}`;
             window.location.replace(`/User/assets/views/index.html?${queryString}`);
-          } 
+          } else{
+            alert("Your role is admin not a customer");
+          }
       }else {
         console.log("No user data found in the database.");
         alert("User data not found. Please contact support.");
