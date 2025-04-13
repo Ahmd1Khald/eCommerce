@@ -96,50 +96,44 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="fixed-top">
+      <nav class="navbar navbar-expand-lg bg-white shadow-sm">
         <div class="container">
-          <a class="navbar-brand fw-bold" href="#">eCommerce</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+            <i class="fas fa-shopping-bag me-2 text-primary"></i>
+            <span>eCommerce</span>
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse sasa" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
+          
+          <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                <a class="nav-link fw-semibold" href="index.html">
+                  <i class="fas fa-home me-1"></i>Home
+                </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./contact.html">Contact</a>
+                <a class="nav-link active fw-semibold" href="contact.html">
+                  <i class="fas fa-envelope me-1"></i>Contact
+                </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./about.html">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./login.html"></a>
+                <a class="nav-link fw-semibold" href="about.html">
+                  <i class="fas fa-info-circle me-1"></i>About
+                </a>
               </li>
             </ul>
             
-            <div class="nav-icons ms-4">
-               <!-- <a style="color: black;margin-right: 10px; position: relative;" href="./wishlist.html"> 
-                 <i class="fa-solid fa-heart"></i>
-                 <span style="color:white;background-color: red;top: -15px;" class="wishlist-count" id="wishlistCount">0</span>
-               </a> -->
-               <!-- <a  onclick="toggleCart()" style="color: black; position: relative; cursor: pointer;margin-right: 10px;"><i class="fa-solid fa-cart-shopping ps-1"></i>  <span style="color:white;background-color: red;top: -15px;" class="cart-count" id="cartCount">0</span> </a> -->
-         
-              <div class="orders_and_Logout">
-              <a style="color: black;cursor: pointer;" > <i class="fa-solid fa-user ps-1"></i></a>
-              <div class="dropDownList">
-                 <a style="" href="./order.html">Orders</a>
-                <a href="./UserAccount.html">profile</a>
-               <a href="">Logout</a>
-                <!-- <button style="width: 100%;height: 100%;"> <a style="" href="./order.html">Orders</a></button>
-                <button> <a href="./UserAccount.html">profile</a></button>
-                <button> <a href="">Logout</a></button> -->
-              </div>
+            <div class="d-flex align-items-center">
+              <a class="nav-link fw-semibold" href="login.html" id="signIn"></a>
             </div>
           </div>
-          </div>
         </div>
-      </nav>   
+      </nav>
+    </div>
+    <div style="margin-top: 76px;"></div>
 
     <!-- Breadcrumb -->
     <div class="container">

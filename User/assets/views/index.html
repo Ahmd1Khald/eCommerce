@@ -13,57 +13,70 @@
     <link rel="stylesheet" href="../styles/bootstrap-5.3.3-dist/css/bootstrap.min.css">
 </head>
 <body>
-  <div class="myNav">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container">
-          <a class="navbar-brand fw-bold" href="#">eCommerce</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse sasa" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./contact.html">Contact</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./about.html">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./login.html" id="signIn"></a>
-              </li>
-            </ul>
+  <div class="fixed-top">
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm">
+      <div class="container">
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+          <i class="fas fa-shopping-bag me-2 text-primary"></i>
+          <span>eCommerce</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active fw-semibold" href="index.html">
+                <i class="fas fa-home me-1"></i>Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fw-semibold" href="contact.html">
+                <i class="fas fa-envelope me-1"></i>Contact
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fw-semibold" href="about.html">
+                <i class="fas fa-info-circle me-1"></i>About
+              </a>
+            </li>
+          </ul>
+          
+          <div class="d-flex align-items-center gap-3">
+            <a href="wishlist.html" class="nav-icon position-relative">
+              <i class="fas fa-heart fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="wishlistCount">
+                0
+              </span>
+            </a>
             
-            <div class="nav-icons ms-4">
-               <a style="color: black;margin-right: 10px; position: relative;" href="./wishlist.html"> 
-                 <i class="fa-solid fa-heart"></i>
-                 <span style="color:white;background-color: red;top: -15px;" class="wishlist-count" id="wishlistCount">0</span>
-               </a>
-              
-              
-               <a  onclick="toggleCart()" style="color: black; position: relative; cursor: pointer;margin-right: 10px;"><i class="fa-solid fa-cart-shopping ps-1"></i>  <span style="color:white;background-color: red;top: -15px;" class="cart-count" id="cartCount">0</span> </a>
-         
-              <div class="orders_and_Logout">
-              <a style="color: black;cursor: pointer;" > <i class="fa-solid fa-user ps-1"></i></a>
-              <div class="dropDownList">
-               
-                 <a style="" href="./order.html">Orders</a>
-                <a href="./profile.html">profile</a>
-               <a href="" id="logoutBtn">Logout</a>
-                <!-- <button style="width: 100%;height: 100%;"> <a style="" href="./order.html">Orders</a></button>
-                <button> <a href="./UserAccount.html">profile</a></button>
-                <button> <a href="">Logout</a></button> -->
-              </div>
+            <a class="nav-icon position-relative" style="cursor: pointer;" onclick="toggleCart()">
+              <i class="fas fa-shopping-cart fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">
+                0
+              </span>
+            </a>
+            
+            <div class="dropdown">
+              <a class="nav-icon" role="button" data-bs-toggle="dropdown">
+                <i class="fas fa-user fs-5"></i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                <li><a class="dropdown-item" href="order.html"><i class="fas fa-box me-2"></i>Orders</a></li>
+                <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user-circle me-2"></i>Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+              </ul>
             </div>
-              
-             
-          </div>
+            
+            <a class="nav-link fw-semibold" href="login.html" id="signIn"></a>
           </div>
         </div>
-      </nav>    
-</div>  
+      </div>
+    </nav>
+  </div>
+  <div style="margin-top: 76px;"></div>
   <div class="container-fluid pt-4">
     <div class="row justify-content-center ">
         <div style="height: 400px;" class=" col-md-6 col-xxl-10 col-xl-8 col-lg-7 col-sm-5">
