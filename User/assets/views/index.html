@@ -18,7 +18,7 @@
       <div class="container">
         <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
           <i class="fas fa-shopping-bag me-2 text-primary"></i>
-          <span>Exclusive</span>
+          <span>eCommerce</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
           <span class="navbar-toggler-icon"></span>
@@ -391,9 +391,14 @@
         signOut(auth)
             .then(() => {
                 if (confirm("Are you sure want to Log out?")) {
+                    // Clear user data from localStorage
                     localStorage.removeItem('userId');
                     localStorage.removeItem('userName');
                     localStorage.removeItem('userEmail');
+                    
+                    // Clear wishlist from sessionStorage
+                    sessionStorage.removeItem('wishlist');
+                    
                     window.location.replace("/User/assets/views/index.html");
                 }
             })
@@ -571,17 +576,17 @@
             const modal = document.createElement('div');
             modal.className = 'quick-view-modal';
             modal.innerHTML = `
-                <div class="modal-content">
+                <div class="modal-content bg-light p-5 rounded-4 shadow-lg">
                     <span class="close-modal">×</span>
                     <div class="modal-body">
                         <div class="modal-image">
                             <img src="${product.image}" alt="${product.title}">
                         </div>
-                        <div class="modal-details">
+                        <div class="modal-details ">
                             <h2>${product.title}</h2>
-                            <p class="modal-category">${product.category}</p>
-                            <p class="modal-price">$${product.price}</p>
-                            <p class="modal-description">${product.description}</p>
+                            <p class="modal-category bg-dark text-light p-2">${product.category}</p>
+                            <p class="modal-price text-dark">$${product.price}</p>
+                            <p class="modal-description text-dark">${product.description}</p>
                             <button class="modal-add-to-cart" onclick="addToCart('${product.id}')">
                                 <i class="fas fa-shopping-cart"></i> Add to Cart
                             </button>
@@ -797,9 +802,6 @@
         wishlistCount.textContent = wishlist.length;
     }
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
-<script src="../styles/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
-<script src="../js/home/script.js"></script>
 <script src="../js/nav.js"></script>
 <footer class="container-fluid bg-black">
     <div class="row  text-white  _footer ">
@@ -842,5 +844,8 @@
       <p>&copy; Copyright Rimel 2025.All Rights Reserved</p>
     </div>
   </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="../styles/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
+    <script src="../js/home/script.js"></script>
 </body>
 </html>
