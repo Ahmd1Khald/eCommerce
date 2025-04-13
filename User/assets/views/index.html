@@ -50,7 +50,7 @@
               <div class="dropDownList">
                
                  <a style="" href="./order.html">Orders</a>
-                <a href="./UserAccount.html">profile</a>
+                <a href="./profile.html">profile</a>
                <a href="" id="logoutBtn">Logout</a>
                 <!-- <button style="width: 100%;height: 100%;"> <a style="" href="./order.html">Orders</a></button>
                 <button> <a href="./UserAccount.html">profile</a></button>
@@ -151,7 +151,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import { getDatabase, child, ref, push, set, get, update, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    import { getDatabase, child, ref, push, set, get, update, runTransaction, increment } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 
     import {
       getAuth,
@@ -379,6 +379,8 @@
             .then(() => {
                 if (confirm("Are you sure want to Log out?")) {
                     localStorage.removeItem('userId');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userEmail');
                     window.location.replace("/User/assets/views/index.html");
                 }
             })
@@ -426,39 +428,45 @@
         const newOrderRef = push(ordersRef);
         const insufficientStockProducts = [];
         const validProducts = [];
-        Promise.all(
-            products.map(async (product) => {
-                try {
-                    const productRef = ref(database, `products/${product.id}`);
-                    await runTransaction(productRef, (currentProduct) => {
-                        if (currentProduct && currentProduct.stock >= product.quantity) {
-                            currentProduct.stock -= product.quantity;
-                            return currentProduct;
-                        } else {
-                            throw new Error(
-                                `Product ${product.title} has insufficient stock (Available: ${
-                                    currentProduct ? currentProduct.stock : 0
-                                }, Requested: ${product.quantity})`
-                            );
-                        }
-                    });
-                    validProducts.push(product);
-                } catch (error) {
-                    insufficientStockProducts.push({
-                        title: product.title,
-                        error: error.message,
-                    });
-                }
-            })
-        )
-            .then(() => {
-                if (validProducts.length === 0) {
+
+        // First check all products stock before making any changes
+        const stockCheckPromises = products.map(async (product) => {
+            const productRef = ref(database, `products/${product.id}`);
+            const snapshot = await get(productRef);
+            const currentProduct = snapshot.val();
+            
+            if (!currentProduct || currentProduct.stock < product.quantity) {
+                insufficientStockProducts.push({
+                    title: product.title,
+                    error: `Product ${product.title} has insufficient stock (Available: ${
+                        currentProduct ? currentProduct.stock : 0
+                    }, Requested: ${product.quantity})`
+                });
+                return false;
+            }
+            return true;
+        });
+
+        // Check all products first
+        Promise.all(stockCheckPromises)
+            .then(async (results) => {
+                // If any product check failed, throw error
+                if (results.includes(false)) {
                     let errorMessage = "No products could be ordered due to insufficient stock:\n";
                     insufficientStockProducts.forEach((item) => {
                         errorMessage += `- ${item.title}: ${item.error}\n`;
                     });
                     throw new Error(errorMessage);
                 }
+
+                // If all checks passed, update stock in a single transaction
+                const updates = {};
+                products.forEach((product) => {
+                    validProducts.push(product);
+                    updates[`products/${product.id}/stock`] = increment(-product.quantity);
+                });
+
+                // Create order data
                 const OrderData = {
                     userId,
                     userName,
@@ -467,7 +475,10 @@
                     feedBack,
                     time,
                 };
-                return set(newOrderRef, OrderData);
+                updates[`orders/${newOrderRef.key}`] = OrderData;
+
+                // Perform all updates in a single transaction
+                return update(ref(database), updates);
             })
             .then(() => {
                 let message = "Order created successfully!";
@@ -664,7 +675,7 @@
         displayProducts();
     }
     
-    // Function to display products
+    // inFunction to display products
     function displayProducts() {
         const productsGrid = document.getElementById('productsGrid');
         if (filteredProducts.length === 0) {
@@ -677,6 +688,7 @@
             productCard.className = 'product-card';
             productCard.style.animationDelay = `${index * 0.1}s`;
             const isOutOfStock = product.stock <= 0;
+            const inWishlist = isInWishlist(product.id);
             productCard.innerHTML = `
                 <div class="product-badge">${product.category}</div>
                 <div class="product-image-container">
@@ -687,7 +699,7 @@
                         </button>
                     </div>
                     <button class="wishlist-btn" onclick="toggleWishlist('${product.id}', this)">
-                        <i class="fas fa-heart ${isInWishlist(product.id) ? 'active' : ''}"></i>
+                        <i class="${inWishlist ? 'fas' : 'far'} fa-heart" style="color: ${inWishlist ? 'red' : 'black'}"></i>
                     </button>
                 </div>
                 <div class="product-info">
@@ -734,14 +746,19 @@
     window.toggleWishlist = function(productId, button) {
         const wishlist = JSON.parse(sessionStorage.getItem('wishlist')) || [];
         const index = wishlist.indexOf(productId);
+        const heartIcon = button.querySelector('i.fa-heart');
         
         if (index === -1) {
             wishlist.push(productId);
-            button.innerHTML = '<i class="fas fa-heart"></i>';
+            heartIcon.classList.remove('far');
+            heartIcon.classList.add('fas');
+            heartIcon.style.color = 'red';
             showNotification('Product added to wishlist', 'success');
         } else {
             wishlist.splice(index, 1);
-            button.innerHTML = '<i class="far fa-heart"></i>';
+            heartIcon.classList.remove('fas');
+            heartIcon.classList.add('far');
+            heartIcon.style.color = 'black';
             showNotification('Product removed from wishlist', 'info');
         }
         
@@ -769,63 +786,46 @@
 </script>
 <script src="../js/nav.js"></script>
 <footer class="container-fluid bg-black">
-  <div class="row  text-white  _footer ">
-    <div class="col-3   text-center">
-      <div class="h4">Exclusive</div>
-      <div class="h6">Subscribe</div>
-      <p>Get 10% off your first order</p>
+    <div class="row  text-white  _footer ">
+      <div class="col-3   text-center">
+        <div class="h4">Exclusive</div>
+        <div class="h6">Subscribe</div>
+        <p>Get 10% off your first order</p>
+      </div>
+      <div class="col-2   text-center">
+        <div class="h4">Support</div>
+        <p>Assuit ,Egypt</p>
+        <p>admin@gmail.com</p>
+      </div>
+      <div class="col-2   text-center">
+        <div class="h4">Account</div>
+        <p>
+          <a class="d-inline" href="./UserAccount.html">My Account</a>
+        </p>
+      </div>
+      <div class="col-2  text-center">
+        <div class="h4">Quick Link</div>
+        <p>
+          <a class="d-inline" href="#">Privacy Policy</a>
+        </p>
+        <p>
+          <a class="d-inline" href="#">Terms Of Use</a>
+        </p>
+      </div>
+      <div class="col-3 text-center">
+        <div class="h4">Contact Us</div>
+        
+        <a href=""><i class="fa-brands fa-facebook-f m-3"></i></a>
+        <a href=""><i class="fa-brands fa-twitter m-3"></i></a>
+        <a href=""><i class="fa-brands fa-linkedin-in m-3"></i></a>
+        <a href=""><i class="fa-brands fa-instagram m-3"></i></a>
+      </div>
     </div>
-    <div class="col-2   text-center">
-      <div class="h4">Support</div>
-      <p>Assuit ,Egypt</p>
-      <p>admin@gmail.com</p>
+    <hr>
+    <div style="text-align: center;height: 30px;">
+      <p>&copy; Copyright Rimel 2025.All Rights Reserved</p>
     </div>
-    <div class="col-2   text-center">
-      <div class="h4">Account</div>
-      <p>
-        <a class="d-inline" href="./UserAccount.html">My Account</a>
-      </p>
-      <p>
-        <a onclick="toggleCart()" class="d-inline" style="cursor: pointer;">Cart</a>
-      </p>
-      <p>
-        <a class="d-inline" href="./login.html">Login/Register</a>
-      </p>
-      <p>
-        <a class="d-inline" href="./wishlist.html">Wishlist</a>
-      </p>
-      <p>
-        <a class="d-inline" href="./order.html">Shop</a>
-      </p>
-    </div>
-    <div class="col-2  text-center">
-      <div class="h4">Quick Link</div>
-      <p>
-        <a class="d-inline" href="#">Privacy Policy</a>
-      </p>
-      <p>
-        <a class="d-inline" href="#">Terms Of Use</a>
-      </p>
-      <p>
-        <a class="d-inline" href="#">FAQ</a>
-      </p>
-      <p>
-        <a class="d-inline" href="./contact.html">Contact</a>
-      </p>
-    </div>
-    <div class="col-3 text-center">
-      <div class="h4">Contact Us</div>
-      <a href=""><i class="fa-brands fa-facebook-f m-3"></i></a>
-      <a href=""><i class="fa-brands fa-twitter m-3"></i></a>
-      <a href=""><i class="fa-brands fa-linkedin-in m-3"></i></a>
-      <a href=""><i class="fa-brands fa-instagram m-3"></i></a>
-    </div>
-  </div>
-  <hr>
-  <div style="text-align: center;height: 30px;">
-    <p>© Copyright Rimel 2025.All Rights Reserved</p>
-  </div>
-</footer>
+  </footer>
     <script src="../styles/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
     <script src="../js/home/script.js"></script>
 </body>

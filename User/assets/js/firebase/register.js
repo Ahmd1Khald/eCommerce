@@ -94,6 +94,8 @@ function storedUserData(name, email, user, role) {
   })
     .then(() => {
       localStorage.setItem('userId', user.uid);
+      localStorage.setItem("userName", name);
+      localStorage.setItem("userEmail", email);
       alert("Data Stored Successfully!");
       window.location.replace(`/User/assets/views/index.html`);
     })

@@ -38,6 +38,9 @@ document
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value.trim();
 
+    
+
+
     if (!email || !password) {
       alert("Please fill all fields.");
       return;
@@ -90,6 +93,8 @@ document
           // Step 4: Navigate based on the role
           if (userData.role === "user") {
             localStorage.setItem('userId', userData.uid);
+            localStorage.setItem("userName", userData.name);
+            localStorage.setItem("userEmail", userData.email);
             alert("User logged in successfully!");
             const queryString = `id=${encodeURIComponent(userData.uid)}&name=${encodeURIComponent(userData.name)}&email=${encodeURIComponent(userData.email)}`;
             window.location.replace(`/User/assets/views/index.html?${queryString}`);
