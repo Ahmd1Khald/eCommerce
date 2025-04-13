@@ -66,4 +66,13 @@
     font-size: 12px;
     text-align: center;
   }
-  
+  /*category options*/
+.select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+}

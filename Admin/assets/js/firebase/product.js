@@ -1,6 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getDatabase,child, ref, push, set, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+import { getDatabase, child, ref, push, set, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 import { data } from "../firebase/data.js"
+import { getAllOrders, generateOrderCards } from './orders.js';
+import { countNormalUsers, countAdminUsers } from './home.js';
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -18,37 +20,35 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// Product Form Submit
+
+
 const productForm = document.getElementById("productForm");
 const errorMessage = document.getElementById("errorMessage");
 
-import { getAllOrders, generateOrderCards } from './orders.js'; 
-import { countNormalUsers, countAdminUsers } from './home.js'; 
-
-
 //! Add Product
-if(productForm)
-productForm.addEventListener("submit", function (event) {
-    event.preventDefault();
+if (productForm)
+    productForm.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-    // Get values from form
-    const productName = document.getElementById("productName").value;
-    const productCategory = document.getElementById("productCategory").value;
-    const productPrice = parseFloat(document.getElementById("productPrice").value);
-    const productDescription = document.getElementById("productDescription").value;
-    const productImage = document.getElementById("productImage").value;
-    const stockQuantity = document.getElementById("stockQuantity").value;
+        // Get values from form
+        const productName = document.getElementById("productName").value;
+        const productCategory = document.getElementById("categoryOptions").value;
+        const productPrice = parseFloat(document.getElementById("productPrice").value);
+        const productDescription = document.getElementById("productDescription").value;
+        const productImage = document.getElementById("productImage").value;
+        const stockQuantity = document.getElementById("stockQuantity").value;
 
-    // Validate form data
-    if (!productName || !productCategory || isNaN(productPrice) || !productDescription || !productImage || !stockQuantity)  {
-        errorMessage.textContent = "All fields are required.";
-        return;
-    } else {
-        errorMessage.textContent = "";
-    }
+        // Validate form data
+        if (!productName || !productCategory || isNaN(productPrice) || !productDescription || !productImage || !stockQuantity) {
+            errorMessage.textContent = "All fields are required.";
+            return;
+        } else {
+            errorMessage.textContent = "";
+        }
 
-    createProduct(productName, productCategory, productPrice, productDescription, productImage,stockQuantity)
-});
+        createProduct(productName, productCategory, productPrice, productDescription, productImage, stockQuantity)
+    });
+
 
 // API URL for external product data
 // const apiUrl = 'https://fakestoreapi.com/products'; // Replace with your API URL
@@ -82,10 +82,11 @@ productForm.addEventListener("submit", function (event) {
 // }
 
 // Create a product in Firebase
-function createProduct(title, category, price, description,image, stock) {
+function createProduct(title, category, price, description, image, stock) {
     // Reference to the Firebase database
+    const categoryID = `category-${Date.now()}`; // give a unique id to category 
     const productsRef = ref(database, "products");
-    
+
     // Product data
     const productData = {
         title,
@@ -94,6 +95,7 @@ function createProduct(title, category, price, description,image, stock) {
         description,
         image,
         stock,
+        categoryID,
     };
 
     // Generate a unique ID using push()
@@ -103,13 +105,14 @@ function createProduct(title, category, price, description,image, stock) {
     set(newProductRef, productData)
         .then(() => {
             alert("Product created successfully!");
-            
+
             productForm.reset(); // Reset the form
         })
         .catch((error) => {
             console.error("Error creating product: ", error);
         });
 }
+
 
 // Fetch all products in Firebase
 function getAllProducts() {
@@ -133,6 +136,50 @@ function getAllProducts() {
             return []; // Return an empty array in case of error
         });
 }
+
+//! new feature
+// Modify getAllCategories to get both name and ID
+async function getAllCategories() {
+    const dbRef = ref(database, "categories");
+    try {
+        const snapshot = await get(dbRef);
+        if (snapshot.exists()) {
+            const categories = Object.values(snapshot.val());
+            // Create a map of category names to their IDs
+            const categoryMap = new Map();
+            categories.forEach(cat => {
+                categoryMap.set(cat.name, cat.id);
+            });
+            return categoryMap;
+        }
+        return new Map();
+    } catch (error) {
+        console.error("Error fetching categories:", error);
+        return new Map();
+    }
+}
+
+//! new feature
+// Modify handleCategoryOptionsField to store the exact categoryID
+async function handleCategoryOptionsField() {
+    const categoryMap = await getAllCategories();
+    const categorySelect = document.getElementById("categoryOptions");
+
+    // Clear existing options first
+    categorySelect.innerHTML = `
+        <option value="" disabled selected>Select Category</option>
+    `;
+
+    // Add categories with their exact IDs from the database
+    for (const [name, id] of categoryMap) {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        option.dataset.categoryId = id; // Store the exact ID from categories database
+        categorySelect.appendChild(option);
+    }
+}
+
 
 // Fetch products map to user in view order
 export async function fetchProductsMap() {
@@ -209,29 +256,29 @@ document.addEventListener("DOMContentLoaded", async function () {
         selectedItem?.classList.add("active");
     }
 
-    if(home){
+    if (home) {
         try {
             let customerNum = await countNormalUsers();
             let adminNum = await countAdminUsers();
-            let content = await getHomeContent(customerNum??0, adminNum??0); // Await the content
+            let content = await getHomeContent(customerNum ?? 0, adminNum ?? 0); // Await the content
             updatePageContent(content, home); // Pass the resolved content
         } catch (error) {
             console.error("Error updating home content:", error);
         }
     }
 
-// Event listener for the home button
-home?.addEventListener("click", async function (event) {
-    event.preventDefault();
-    try {
-        let customerNum = await countNormalUsers();
-        let adminNum = await countAdminUsers();
-        let content = await getHomeContent(customerNum??0, adminNum??0); // Await the content
-        updatePageContent(content, home); // Pass the resolved content
-    } catch (error) {
-        console.error("Error updating home content:", error);
-    }
-});
+    // Event listener for the home button
+    home?.addEventListener("click", async function (event) {
+        event.preventDefault();
+        try {
+            let customerNum = await countNormalUsers();
+            let adminNum = await countAdminUsers();
+            let content = await getHomeContent(customerNum ?? 0, adminNum ?? 0); // Await the content
+            updatePageContent(content, home); // Pass the resolved content
+        } catch (error) {
+            console.error("Error updating home content:", error);
+        }
+    });
 
     products?.addEventListener("click", async function (event) {
         event.preventDefault();
@@ -242,7 +289,7 @@ home?.addEventListener("click", async function (event) {
 
     categories?.addEventListener("click", function (event) {
         event.preventDefault();
-        
+
         updatePageContent(getCategoriesContent(), categories);
     });
 
@@ -253,7 +300,7 @@ home?.addEventListener("click", async function (event) {
     });
 
     // Function to return Home Page Content
-    async function getHomeContent(customerNum,adminNum) {
+    async function getHomeContent(customerNum, adminNum) {
         return `
         <div class="row">
             <div class="col-sm-12 col-xl-9">
@@ -286,41 +333,41 @@ home?.addEventListener("click", async function (event) {
         </div>`;
     }
 
-// Function to return Products in Page Content
-async function getProductContent() {
-    try {
-        // Fetch products asynchronously
-        const products = await getAllProducts();
-        
-        // Ensure that we have an array of products
-        if (!Array.isArray(products)) {
-            console.error("Expected an array of products, but got:", products);
-            return "<div>Error loading products.</div>";
-        }
+    // Function to return Products in Page Content
+    async function getProductContent() {
+        try {
+            // Fetch products asynchronously
+            const products = await getAllProducts();
 
-        // Generate product cards dynamically once the products are available
-        return `
+            // Ensure that we have an array of products
+            if (!Array.isArray(products)) {
+                console.error("Expected an array of products, but got:", products);
+                return "<div>Error loading products.</div>";
+            }
+
+            // Generate product cards dynamically once the products are available
+            return `
         <div class="container mt-4">
             <h2 class="mb-4">Products</h2>
             <div class="row">
                 ${generateProductCards(products)} <!-- Pass the products to generate cards -->
             </div>
         </div>`;
-    } catch (error) {
-        console.error("Error fetching products:", error);
-        return "<div>Error loading products.</div>";
+        } catch (error) {
+            console.error("Error fetching products:", error);
+            return "<div>Error loading products.</div>";
+        }
     }
-}
 
-// Function to generate product cards dynamically
-function generateProductCards(products) {
-    return products.map(p => {
-        // Escape single quotes in string values
-        const escapedTitle = p.title.replace(/'/g, "\\'");
-        const escapedCategory = p.category.replace(/'/g, "\\'");
-        const escapedDescription = p.description.replace(/'/g, "\\'");
-        
-        return `
+    // Function to generate product cards dynamically
+    function generateProductCards(products) {
+        return products.map(p => {
+            // Escape single quotes in string values
+            const escapedTitle = p.title.replace(/'/g, "\\'");
+            const escapedCategory = p.category.replace(/'/g, "\\'");
+            const escapedDescription = p.description.replace(/'/g, "\\'");
+
+            return `
         <div class="col-md-4 mb-4 product-card" id="product-${p.id}">
             <div class="card shadow-sm">
                 <img src="${p.image}" class="card-img-top" alt="${p.title}">
@@ -336,13 +383,13 @@ function generateProductCards(products) {
             </div>
         </div>
         `;
-    }).join('');
-}
+        }).join('');
+    }
 
     // Function to return Categories in Page Content
     function getCategoriesContent() {
         return `getCategoriesContent`;
-    } 
+    }
 
     // Function to return Categories in Page Content
     async function getOrdersContent() {
@@ -370,13 +417,13 @@ function generateProductCards(products) {
             return "<div>Error loading orders.</div>";
         }
     }
-    
-    
-    
+
+
+
 });
 
 // Make deleteProduct globally accessible
-window.deleteProduct = function(productId) {
+window.deleteProduct = function (productId) {
     const productsRef = ref(database, `products/${productId}`);
     if (confirm("Are you sure you want to delete this product?")) {
         set(productsRef, null)
@@ -392,7 +439,31 @@ window.deleteProduct = function(productId) {
 };
 
 // Make editProductPage globally accessible
-window.editProductPage = function(productId, title, price, stock, category, description) {
+window.editProductPage = function (productId, title, price, stock, category, description) {
     const queryString = `?id=${encodeURIComponent(productId)}&title=${encodeURIComponent(title)}&price=${encodeURIComponent(price)}&stock=${encodeURIComponent(stock)}&category=${encodeURIComponent(category)}&description=${encodeURIComponent(description)}`;
     window.location.href = `/Admin/assets/views/updateProductForm.html${queryString}`;
 };
+
+// Make sure to call handleCategoryOptionsField when the page loads
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log("Page loaded, initializing category field"); // Debug log
+    await handleCategoryOptionsField();
+});
+
+
+//validate form fields
+
+// 1- Product name
+const productNameInput = document.getElementById("productName");
+// Live filtering: only letters allowed
+productNameInput.addEventListener("input", function () {
+    this.value = this.value.replace(/[^a-zA-Z]/g, '');
+});
+
+// 2- Product description
+const productDescription = document.getElementById("productDescription")
+productDescription.addEventListener("input", function () {
+    this.value = this.value.replace(/[^a-zA-Z]/g, '');
+});
+
+

@@ -18,9 +18,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
-
-import { fetchProductsMap } from './product.js';
-
+  
 // Create an Order in Firebase
 // function createOrder(userId, userName, products, status, feedBack, time) {
 //   const ordersRef = ref(database, "orders");
