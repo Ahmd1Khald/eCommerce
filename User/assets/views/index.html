@@ -151,7 +151,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import { getDatabase, child, ref, push, set, get, update } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    import { getDatabase, child, ref, push, set, get, update,runTransaction } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 
     import {
   getAuth,
@@ -409,9 +409,9 @@ if(localStorage.getItem('userId')){
 }
 
 
-    // Create an Order in Firebase
 function createOrder(userId, userName, products, status, feedBack, time) {
   const ordersRef = ref(database, "orders");
+  const productsRef = ref(database, "products");
 
   const OrderData = {
     userId,
@@ -424,19 +424,67 @@ function createOrder(userId, userName, products, status, feedBack, time) {
 
   const newOrderRef = push(ordersRef);
 
-  set(newOrderRef, OrderData)
+  // Track products with insufficient stock
+  const insufficientStockProducts = [];
+  const validProducts = [];
+
+  // Check and update stock for each product based on quantity
+  Promise.all(
+    products.map(async (product) => {
+      try {
+        const productRef = ref(database, `products/${product.id}`);
+        await runTransaction(productRef, (currentProduct) => {
+          if (currentProduct && currentProduct.stock >= product.quantity) {
+            currentProduct.stock -= product.quantity; // Reduce stock by the ordered quantity
+            return currentProduct;
+          } else {
+            throw new Error(
+              `Product ${product.title} has insufficient stock (Available: ${
+                currentProduct ? currentProduct.stock : 0
+              }, Requested: ${product.quantity})`
+            );
+          }
+        });
+        validProducts.push(product); // Add to valid products if stock update succeeds
+      } catch (error) {
+        insufficientStockProducts.push({
+          title: product.title,
+          error: error.message,
+        });
+      }
+    })
+  )
     .then(() => {
-      alert("Order created successfully!");
+      // If no products are valid, throw an error
+      if (validProducts.length === 0) {
+        throw new Error("No products could be ordered due to insufficient stock.");
+      }
+
+      // Update OrderData with only valid products
+      OrderData.products = validProducts;
+
+      // Create the order with valid products
+      return set(newOrderRef, OrderData);
+    })
+    .then(() => {
+      let message = "Order created successfully!";
+      if (insufficientStockProducts.length > 0) {
+        message += "\nHowever, the following products could not be ordered due to insufficient stock:\n";
+        insufficientStockProducts.forEach((item) => {
+          message += `- ${item.title}: ${item.error}\n`;
+        });
+      }
+      alert(message);
       return getAllOrders().then((orders) => {
         console.log(orders);
       });
     })
     .catch((error) => {
-    console.error("Error creating order: ", error);
+      console.error("Error creating order: ", error);
+      alert("Failed to create order: " + error.message);
     });
 }
-    // Function for checkout
-    window.checkout = function() {
+window.checkout = function() {
         if (cart.length === 0) {
             alert('Your cart is empty!');
             return;
