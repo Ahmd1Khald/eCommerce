@@ -32,7 +32,7 @@
                 <a class="nav-link" href="./about.html">About</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./login.html">Sign In</a>
+                <a class="nav-link" href="./login.html" id="signIn"></a>
               </li>
             </ul>
             
@@ -402,6 +402,13 @@ function getAllOrders() {
     });
 }
 
+if(localStorage.getItem('userId')){
+    document.getElementById('signIn').textContent = "";
+}else{
+    document.getElementById('signIn').textContent = "Sign In";
+}
+
+
     // Create an Order in Firebase
 function createOrder(userId, userName, products, status, feedBack, time) {
   const ordersRef = ref(database, "orders");
@@ -441,10 +448,13 @@ function createOrder(userId, userName, products, status, feedBack, time) {
             
         })
         
-        
-        createOrder(localStorage.getItem('userId'),userData.name,cart,'Pending','',Date.now());
+        if(localStorage.getItem('userId')){
+            createOrder(localStorage.getItem('userId'),userData.name,cart,'Pending','',Date.now());
+        }else{
+            alert('Login first to make order');
+            window.location.replace("/User/assets/views/login.html");
+        }
         // For now, just show an alert
-        // alert('Thank you for your purchase! This is a demo checkout.');
         
         // Clear cart
         cart = [];
