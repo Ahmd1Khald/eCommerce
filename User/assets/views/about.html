@@ -117,7 +117,7 @@
                     <a class="nav-link" href="./about.html">About</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="./login.html">Sign In</a>
+                    <a class="nav-link" href="./login.html"></a>
                   </li>
                 </ul>
                 
@@ -160,7 +160,7 @@
                     <p>Exclusive has more than 1 Million products to offer, growing at a very fast. Exclusive offers a diverse assortment in categories ranging from consumer.</p>
                 </div>
                 <div class="col-md-6 about-image">
-                    <img src="/User/resourses/tablet1.jpg" alt="Shopping Experience" class="img-fluid">
+                    <img src="/User/resources/images/tablet1.jpg" alt="Shopping Experience" class="img-fluid">
                 </div>
             </div>
         </div>
@@ -325,5 +325,12 @@
 
     <script src="../styles/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
     <script src="../js/home/script.js"></script>
+    <script>
+        if(localStorage.getItem('userId')){
+    document.getElementById('signIn').textContent = "";
+}else{
+    document.getElementById('signIn').textContent = "Sign In";
+}
+    </script>
 </body>
 </html>

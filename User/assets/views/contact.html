@@ -114,7 +114,7 @@
                 <a class="nav-link" href="./about.html">About</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="./login.html">Sign In</a>
+                <a class="nav-link" href="./login.html"></a>
               </li>
             </ul>
             
@@ -268,6 +268,11 @@
     <script src="../js/home/script.js"></script>
     <script src="../js/nav.js"></script>
     <script>
+        if(localStorage.getItem('userId')){
+    document.getElementById('signIn').textContent = "";
+}else{
+    document.getElementById('signIn').textContent = "Sign In";
+}
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             // Add your form submission logic here
