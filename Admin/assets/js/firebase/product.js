@@ -368,8 +368,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             const escapedDescription = p.description.replace(/'/g, "\\'");
             
             // Determine stock status and badge
-            const stockStatus = p.stock === 0 ? 'danger' : p.stock <= 5 ? 'warning' : 'success';
-            const stockLabel = p.stock === 0 ? 'Out of Stock' : p.stock <= 5 ? 'Low Stock' : 'In Stock';
+            const stockStatus ='' //p.stock === 0 ? 'danger' : p.stock <= 5? 'warning' : 'success';
+            const stockLabel = ''//p.stock === 0 ? 'Out of Stock' : p.stock <= 5 ? 'Low Stock' : 'In Stock';
 
             return `
             <div class="col-md-4 mb-4 product-card" id="product-${p.id}">
