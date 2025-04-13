@@ -67,7 +67,9 @@ function checkRoleAddPassAdminData(id){
           if (userData.role === "admin") {
             const queryString = `?id=${encodeURIComponent(userData.uid)}&name=${encodeURIComponent(userData.name)}&email=${encodeURIComponent(userData.email)}`;
             window.location.replace(`/Admin/assets/views/dashboard.html?admin=${queryString}`);
-          } 
+          } else{
+            alert("You are a customer role not support to login as admin.");
+          }
       }else {
         console.log("No user data found in the database.");
         alert("User data not found. Please contact support.");

@@ -9,18 +9,20 @@
 <body>
     <div class="container mt-4">
         <h2 class="mb-4">My Orders</h2>
-        <div class="row">
-            <div class="card mb-3 shadow-sm">
-                <div class="card-header bg-secondary text-white">
-                    <h5>Product: ${product.title || "Unknown"}</h5>
-                </div>
-                    <div class="card-body">
-                        <p><strong>Quantity:</strong> ${order.quantity}</p>
-                        <p><strong>Total Price:</strong> ${order.quantity*product.price}</p>
-                        <p><strong>Order Status:</strong> ${order.status}</p>
-                    </div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title">Order by: ${order.userName}</h5>
+                <p><strong>Feedback:</strong> ${order.feedBack == ''?'No Feedback Yet':order.feedBack}</p>
+                <p><strong>Time:</strong> ${new Date(order.time).toLocaleString()}</p>
+                <p><strong>Status:</strong>${order.status} </p>
+                <button class="btn btn-success mt-2" data-order-id="${order.id}" onclick="saveOrderChange('${order.id}')">Save Change</button>
+                <br><br>
+                <h6>Products:</h6>
+                ${generateOrderProductList(order.products, productsMap)}
+              </div>
             </div>
-        </div>
+          </div>
     </div>
 
     <script src="../styles/bootstrap-5.3.3-dist/js/bootstrap.js"></script>
