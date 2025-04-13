@@ -366,24 +366,136 @@ document.addEventListener("DOMContentLoaded", async function () {
             const escapedTitle = p.title.replace(/'/g, "\\'");
             const escapedCategory = p.category.replace(/'/g, "\\'");
             const escapedDescription = p.description.replace(/'/g, "\\'");
+            
+            // Determine stock status and badge
+            const stockStatus = p.stock === 0 ? 'danger' : p.stock <= 5 ? 'warning' : 'success';
+            const stockLabel = p.stock === 0 ? 'Out of Stock' : p.stock <= 5 ? 'Low Stock' : 'In Stock';
 
             return `
-        <div class="col-md-4 mb-4 product-card" id="product-${p.id}">
-            <div class="card shadow-sm">
-                <img src="${p.image}" class="card-img-top" alt="${p.title}">
-                <div class="card-body">
-                    <h5 class="card-title">${p.title}</h5>
-                    <p class="card-text">${p.description}</p>
-                    <p><strong>Category:</strong> ${p.category}</p>
-                    <p><strong>Stock:</strong> ${p.stock}</p>
-                    <p><strong>Price:</strong> ${p.price}</p>
-                    <button class="btn btn-warning" onclick="editProductPage('${p.id}', '${escapedTitle}', ${p.price}, ${p.stock}, '${escapedCategory}', '${escapedDescription}')">Edit</button>
-                    <button class="btn btn-danger" onclick="deleteProduct('${p.id}')">Delete</button>
+            <div class="col-md-4 mb-4 product-card" id="product-${p.id}">
+                <div class="card h-100 border-0 shadow-sm hover-shadow" style="transition: all 0.3s ease;">
+                    <div class="position-relative">
+                        <img src="${p.image}" class="card-img-top" alt="${p.title}" 
+                             style="height: 200px; object-fit: contain; padding: 1rem; background: #f8f9fa;">
+                        <span class="position-absolute top-0 end-0 m-2 badge bg-${stockStatus}">
+                            ${stockLabel}
+                        </span>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <div class="mb-2">
+                            <span class="badge bg-primary">${p.category}</span>
+                        </div>
+                        <h5 class="card-title text-truncate mb-1" title="${p.title}">${p.title}</h5>
+                        <p class="card-text small text-muted mb-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                            ${p.description}
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h4 class="mb-0 text-primary">$${p.price.toFixed(2)}</h4>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-box me-1 text-${stockStatus}"></i>
+                                <span class="small text-${stockStatus}">${p.stock} units</span>
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-3 border-top">
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-primary flex-grow-1 d-flex align-items-center justify-content-center" 
+                                        onclick="editProductPage('${p.id}', '${escapedTitle}', ${p.price}, ${p.stock}, '${escapedCategory}', '${escapedDescription}')">
+                                    <i class="fas fa-edit me-2"></i>Edit
+                                </button>
+                                <button class="btn btn-outline-danger flex-grow-1 d-flex align-items-center justify-content-center" 
+                                        onclick="deleteProduct('${p.id}')">
+                                    <i class="fas fa-trash-alt me-2"></i>Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        `;
+            `;
         }).join('');
+    }
+
+    // Add event listeners for search and filter functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const pageContent = document.getElementById('page-content');
+        if (pageContent) {
+            pageContent.addEventListener('input', function(e) {
+                if (e.target.id === 'searchProducts') {
+                    handleSearch(e.target.value);
+                }
+            });
+
+            pageContent.addEventListener('change', function(e) {
+                if (e.target.id === 'categoryFilter') {
+                    handleCategoryFilter(e.target.value);
+                } else if (e.target.id === 'sortProducts') {
+                    handleSort(e.target.value);
+                }
+            });
+        }
+    });
+
+    function handleSearch(searchTerm) {
+        const productCards = document.querySelectorAll('.product-card');
+        searchTerm = searchTerm.toLowerCase();
+
+        productCards.forEach(card => {
+            const title = card.querySelector('.product-title').textContent.toLowerCase();
+            const category = card.querySelector('.product-category').textContent.toLowerCase();
+            
+            if (title.includes(searchTerm) || category.includes(searchTerm)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    function handleCategoryFilter(category) {
+        const productCards = document.querySelectorAll('.product-card');
+        
+        productCards.forEach(card => {
+            const productCategory = card.querySelector('.product-category').textContent;
+            if (category === 'all' || productCategory === category) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    function handleSort(sortOption) {
+        const productsGrid = document.getElementById('productsGrid');
+        const productCards = Array.from(document.querySelectorAll('.product-card'));
+
+        productCards.sort((a, b) => {
+            const titleA = a.querySelector('.product-title').textContent;
+            const titleB = b.querySelector('.product-title').textContent;
+            const priceA = parseFloat(a.querySelector('.product-price').textContent.replace('$', ''));
+            const priceB = parseFloat(b.querySelector('.product-price').textContent.replace('$', ''));
+            const stockA = parseInt(a.querySelector('.product-stock').textContent);
+            const stockB = parseInt(b.querySelector('.product-stock').textContent);
+
+            switch (sortOption) {
+                case 'name-asc':
+                    return titleA.localeCompare(titleB);
+                case 'name-desc':
+                    return titleB.localeCompare(titleA);
+                case 'price-asc':
+                    return priceA - priceB;
+                case 'price-desc':
+                    return priceB - priceA;
+                case 'stock-asc':
+                    return stockA - stockB;
+                case 'stock-desc':
+                    return stockB - stockA;
+                default:
+                    return 0;
+            }
+        });
+
+        productsGrid.innerHTML = '';
+        productCards.forEach(card => productsGrid.appendChild(card));
     }
 
     // Function to return Categories in Page Content
