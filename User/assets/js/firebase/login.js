@@ -89,6 +89,7 @@ document
           console.log("User Role:", userData.role);
           // Step 4: Navigate based on the role
           if (userData.role === "user") {
+            localStorage.setItem('userId', userData.uid);
             alert("User logged in successfully!");
             const queryString = `id=${encodeURIComponent(userData.uid)}&name=${encodeURIComponent(userData.name)}&email=${encodeURIComponent(userData.email)}`;
             window.location.replace(`/User/assets/views/index.html?${queryString}`);

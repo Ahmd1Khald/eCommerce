@@ -93,6 +93,7 @@ function storedUserData(name, email, user, role) {
     role: role,
   })
     .then(() => {
+      localStorage.setItem('userId', user.uid);
       alert("Data Stored Successfully!");
       window.location.replace(`/User/assets/views/index.html`);
     })

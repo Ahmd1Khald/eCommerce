@@ -51,7 +51,7 @@
                
                  <a style="" href="./order.html">Orders</a>
                 <a href="./UserAccount.html">profile</a>
-               <a href="">Logout</a>
+               <a href="" id="logoutBtn">Logout</a>
                 <!-- <button style="width: 100%;height: 100%;"> <a style="" href="./order.html">Orders</a></button>
                 <button> <a href="./UserAccount.html">profile</a></button>
                 <button> <a href="">Logout</a></button> -->
@@ -153,6 +153,14 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
     import { getDatabase, child, ref, push, set, get, update } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 
+    import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithPopup, // Import signInWithPopup
+  GoogleAuthProvider,
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+    import { signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
     // Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyDiOz7EUZnjFYR90oeKf2xS2n-iwwEJX3k",
@@ -167,6 +175,7 @@
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const database = getDatabase(app);
 
     // Global variables to store all products and filtered products
@@ -346,10 +355,26 @@ const urlParams = new URLSearchParams(window.location.search);
   email: urlParams.get('email'),
 };
 
+
 console.log("userData");
 console.log(userData.id);
 });
 
+//Sign Out
+document.getElementById("logoutBtn").addEventListener("click", (event) => {
+  event.preventDefault();
+  signOut(auth)
+    .then(() => {
+      confirm("Are you sure want to Log out?");
+      localStorage.removeItem('userId');
+      window.location.replace("/User/assets/views/login.html");
+
+    })
+    .catch((error) => {
+      console.error("Logout error:", error);
+      alert("Error logging out. Please try again.");
+    });
+});
 
 // get all orders from firebase
 function getAllOrders() {
@@ -417,7 +442,7 @@ function createOrder(userId, userName, products, status, feedBack, time) {
         })
         
         
-        createOrder(userData.id,userData.name,cart,'Pending','',Date.now());
+        createOrder(localStorage.getItem('userId'),userData.name,cart,'Pending','',Date.now());
         // For now, just show an alert
         // alert('Thank you for your purchase! This is a demo checkout.');
         
