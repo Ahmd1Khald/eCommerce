@@ -53,8 +53,8 @@
         loadingSpinner.style.display = 'flex';
         
         try {
-            // Get wishlist from localStorage
-            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            // Get wishlist from sessionStorage
+            const wishlist = JSON.parse(sessionStorage.getItem('wishlist')) || [];
             
             // Update wishlist count in all places
             const wishlistCounts = document.querySelectorAll('#wishlistCount');
@@ -164,13 +164,13 @@
     
     // Function to remove product from wishlist
     window.removeFromWishlist = function(productId) {
-        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        let wishlist = JSON.parse(sessionStorage.getItem('wishlist')) || [];
         
         // Remove product from wishlist
         wishlist = wishlist.filter(id => id !== productId);
         
         // Save updated wishlist
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        sessionStorage.setItem('wishlist', JSON.stringify(wishlist));
         
         // Update wishlist count in all places
         const wishlistCounts = document.querySelectorAll('#wishlistCount');

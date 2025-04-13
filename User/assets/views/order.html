@@ -4,28 +4,151 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/User/assets/styles/bootstrap-5.3.3-dist/css/bootstrap.css">
-    <title>Orders</title>
+    <title>My Orders</title>
 </head>
 <body>
     <div class="container mt-4">
         <h2 class="mb-4">My Orders</h2>
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-              <div class="card-body">
-                <h5 class="card-title">Order by: ${order.userName}</h5>
-                <p><strong>Feedback:</strong> ${order.feedBack == ''?'No Feedback Yet':order.feedBack}</p>
-                <p><strong>Time:</strong> ${new Date(order.time).toLocaleString()}</p>
-                <p><strong>Status:</strong>${order.status} </p>
-                <button class="btn btn-success mt-2" data-order-id="${order.id}" onclick="saveOrderChange('${order.id}')">Save Change</button>
-                <br><br>
-                <h6>Products:</h6>
-                ${generateOrderProductList(order.products, productsMap)}
-              </div>
-            </div>
-          </div>
+        <div id="orders-container" class="row">
+            <!-- Order cards will be inserted here dynamically -->
+        </div>
     </div>
 
     <script src="../styles/bootstrap-5.3.3-dist/js/bootstrap.js"></script>
     <script src="../js/home/order.js"></script>
+    <script>
+        // Example simulated data
+        const orders = [
+            {
+                id: "order123",
+                userName: "Ahmed Khaled",
+                feedBack: "",
+                time: Date.now(),
+                status: "Pending",
+                products: [
+                    { productId: "prod1", quantity: 2 },
+                    { productId: "prod2", quantity: 1 }
+                ]
+            }
+        ];
+
+        const productsMap = {
+            prod1: { title: "Wireless Headphones" },
+            prod2: { title: "Smart Watch" }
+        };
+
+        function generateOrderProductList(products, productsMap) {
+            if (!Array.isArray(products) || products.length === 0) {
+                return "<p>No products in this order.</p>";
+            }
+            return `
+                <ul class="list-group mb-3">
+                    ${products.map(prod => {
+                        const productInfo = productsMap[prod.productId];
+                        return `
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                ${productInfo ? productInfo.title : "Unknown Product"}
+                                <span class="badge bg-primary rounded-pill">Qty: ${prod.quantity}</span>
+                            </li>
+                        `;
+                    }).join("")}
+                </ul>
+            `;
+        }
+
+        function renderOrders(orders, productsMap) {
+            const container = document.getElementById('orders-container');
+            container.innerHTML = orders.map(order => `
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">${order.userName}</h5>
+                            <p><strong>Time:</strong> ${new Date(order.time).toLocaleString()}</p>
+                            <p><strong>Status:</strong> ${order.status}</p>
+                            
+                            <h6>Products:</h6>
+                            ${generateOrderProductList(order.products, productsMap)}
+
+                            <div class="mt-3">
+                                <label for="feedback-${order.id}" class="form-label">Your Feedback:</label>
+                                <input type="text" id="feedback-${order.id}" class="form-control" value="${order.feedBack}">
+                                <button class="btn btn-primary mt-2" onclick="saveFeedback('${order.id}')">Save Feedback</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveFeedback(orderId) {
+            const input = document.getElementById(`feedback-${orderId}`);
+            const newFeedback = input.value.trim();
+
+            if (!newFeedback) {
+                alert("Please write some feedback before saving.");
+                return;
+            }
+
+            console.log(`Saving feedback for Order ${orderId}: ${newFeedback}`);
+
+            // You can connect this to your Firebase here:
+            // update(ref(database, `orders/${orderId}`), { feedBack: newFeedback })
+
+            alert(`Feedback saved: "${newFeedback}"`);
+        }
+
+        // Render the orders on page load
+        renderOrders(orders, productsMap);
+
+import { getDatabase, ref, child, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+
+// Assuming you already initialized Firebase and `database` exists
+const database = getDatabase();  // or your existing database instance
+
+export function getUserOrders(userId) {
+    const dbRef = ref(database);
+    return get(child(dbRef, "orders"))
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                const ordersData = snapshot.val();
+
+                // Filter orders by userId
+                const userOrders = Object.entries(ordersData)
+                    .filter(([id, order]) => order.userId === userId)
+                    .map(([id, order]) => ({
+                        id,
+                        userId: order.userId,
+                        userName: order.userName,
+                        products: order.products,
+                        status: order.status,
+                        feedBack: order.feedBack,
+                        time: order.time
+                    }));
+
+                return userOrders;
+            } else {
+                return [];
+            }
+        })
+        .catch((error) => {
+            console.error("Error fetching user orders:", error);
+            return [];
+        });
+}
+
+const userId = "FZrA37lVTHOR3LWrqYX8P9nAbtP2";  // Replace with logged-in user's ID
+
+getUserOrders(userId).then((orders) => {
+    console.log("User's Orders:", orders);
+    if (orders.length === 0) {
+        alert("No orders found for this user.");
+    } else {
+        // Call your rendering function here, like:
+        document.getElementById("orders-container").innerHTML = generateOrderCards(orders, productsMap);
+    }
+});
+
+
+    </script>
 </body>
 </html>

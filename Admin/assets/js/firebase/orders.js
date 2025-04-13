@@ -104,57 +104,105 @@ function updateOrderStatus(orderId, newStatus) {
 // Function to generate product list HTML
 function generateOrderProductList(products, productsMap) {
   if (!Array.isArray(products) || products.length === 0) {
-    return "<p>No products in this order.</p>";
+      return "<p>No products in this order.</p>";
   }
-  
 
   return `
-    <ul class="list-group mb-3">
-      ${products
-        .map((prod) => {
-          const productInfo = productsMap[prod.productId];
-          return `
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              ${productInfo ? productInfo.title : "Unknown Product"}
-              <span class="badge bg-primary rounded-pill">Qty: ${prod.quantity}</span>
-            </li>
-          `;
-        })
-        .join("")}
-    </ul>
+      <ul class="list-group mb-3">
+          ${products
+              .map((prod) => {
+                  // Check if prod exists and has a title (direct product data case)
+                  if (prod && prod.title) {
+                      return `
+                          <li class="list-group-item d-flex justify-content-between align-items-center">
+                              ${prod.title}
+                              <span class="badge bg-secondary rounded-pill">Qty: ${prod.quantity || 'N/A'}</span>
+                          </li>
+                      `;
+                  }
+                  // Fallback to productId lookup in productsMap
+                  if (!prod || !prod.productId) {
+                      console.warn("Invalid product entry in order:", prod);
+                      return `
+                          <li class="list-group-item d-flex justify-content-between align-items-center text-danger">
+                              Unknown Product
+                              <span class="badge bg-secondary rounded-pill">Qty: ${prod?.quantity || 'N/A'}</span>
+                          </li>
+                      `;
+                  }
+
+                  const productInfo = productsMap[prod.productId];
+                  if (!productInfo) {
+                      console.warn(`Product ID "${prod.productId}" not found in productsMap.`);
+                      return `
+                          <li class="list-group-item d-flex justify-content-between align-items-center text-danger">
+                              Unknown Product (ID: ${prod.productId})
+                              <span class="badge bg-secondary rounded-pill">Qty: ${prod.quantity}</span>
+                          </li>
+                      `;
+                  }
+
+                  return `
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                          ${productInfo.title}
+                          <span class="badge bg-primary rounded-pill">Qty: ${prod.quantity}</span>
+                      </li>
+                  `;
+              })
+              .join("")}
+      </ul>
   `;
 }
 
 // Function to generate order cards dynamically
+// Function to generate order cards dynamically
 export function generateOrderCards(orders, productsMap) {
   return orders
-    .map((order) => {
-      const options = ["Pending", "Confirm", "Reject"].map(status => {
-        return `<option value="${status}" ${order.status === status ? 'selected' : ''}>${status}</option>`;
-      }).join('');
+      .map((order) => {
+          // Calculate total price for the order
+          let totalPrice = 0;
+          if (Array.isArray(order.products)) {
+              totalPrice = order.products.reduce((sum, prod) => {
+                  // Handle case where prod has direct product details or productId
+                  if (prod && prod.price && typeof prod.price === 'number') {
+                      // Direct price in product (case where order includes full product details)
+                      return sum + prod.price * (prod.quantity || 0);
+                  } else if (prod && prod.productId && productsMap[prod.productId]) {
+                      // Lookup price in productsMap
+                      return sum + (productsMap[prod.productId].price * (prod.quantity || 0));
+                  }
+                  console.warn(`Skipping price calculation for invalid product:`, prod);
+                  return sum;
+              }, 0);
+          }
 
-      return `
-        <div class="col-md-6 mb-4">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              <h5 class="card-title">Order by: ${order.userName}</h5>
-              <p><strong>Feedback:</strong> ${order.feedBack == ''?'No Feedback Yet':order.feedBack}</p>
-              <p><strong>Time:</strong> ${new Date(order.time).toLocaleString()}</p>
-              <p><strong>Status:</strong> 
-                <select id="status-${order.id}" class="form-control" data-order-id="${order.id}">
-                  ${options}
-                </select>
-              </p>
-              <button class="btn btn-success mt-2" data-order-id="${order.id}" onclick="saveOrderChange('${order.id}')">Save Change</button>
-              <br><br>
-              <h6>Products:</h6>
-              ${generateOrderProductList(order.products, productsMap)}
-            </div>
-          </div>
-        </div>
-      `;
-    })
-    .join("");
+          const options = ["Pending", "Confirm", "Reject"].map(status => {
+              return `<option value="${status}" ${order.status === status ? 'selected' : ''}>${status}</option>`;
+          }).join('');
+          console.log("Order Products:", JSON.stringify(order.products)); // Stringify for better debugging
+          return `
+              <div class="col-md-6 mb-4">
+                  <div class="card shadow-sm">
+                      <div class="card-body">
+                          <h5 class="card-title">Order by: ${order.userName}</h5>
+                          <p><strong>Feedback:</strong> ${order.feedBack == '' ? 'No Feedback Yet' : order.feedBack}</p>
+                          <p><strong>Time:</strong> ${new Date(order.time).toLocaleString()}</p>
+                          <p><strong>Total Price:</strong> $${totalPrice.toFixed(2)}</p>
+                          <p><strong>Status:</strong> 
+                              <select id="status-${order.id}" class="form-control" data-order-id="${order.id}">
+                                  ${options}
+                              </select>
+                          </p>
+                          <button class="btn btn-success mt-2" data-order-id="${order.id}" onclick="saveOrderChange('${order.id}')">Save Change</button>
+                          <br><br>
+                          <h6>Products:</h6>
+                          ${generateOrderProductList(order.products, productsMap)}
+                      </div>
+                  </div>
+              </div>
+          `;
+      })
+      .join("");
 }
 // Function to save order status change
 window.saveOrderChange = function(orderId) {
@@ -168,7 +216,6 @@ window.saveOrderChange = function(orderId) {
 };
 
 
-// Uncomment and fix createOrder call
 // document.getElementById("createOrderBtn").addEventListener("click", function (event) {
 //   event.preventDefault();
 //   createOrder(

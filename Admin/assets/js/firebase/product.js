@@ -145,13 +145,32 @@ export async function fetchProductsMap() {
         if (snapshot.exists()) {
             const data = snapshot.val();
 
-            // Convert to productsMap
+            // Convert to productsMap with validation
             const productsMap = {};
             for (const productId in data) {
-                productsMap[productId] = {
-                    ...data[productId],
-                    id: productId // optional: include ID for future use
-                };
+                const product = data[productId];
+                // Validate required fields
+                if (
+                    product &&
+                    typeof product.image === 'string' &&
+                    typeof product.price === 'number' &&
+                    typeof product.stock === 'number' && // Use stock instead of quantity
+                    typeof product.title === 'string' &&
+                    typeof product.category === 'string' &&
+                    typeof product.description === 'string'
+                ) {
+                    productsMap[productId] = {
+                        id: productId,
+                        image: product.image,
+                        price: product.price,
+                        stock: product.stock, // Use stock instead of quantity
+                        title: product.title,
+                        category: product.category,
+                        description: product.description
+                    };
+                } else {
+                    console.warn(`Skipping invalid product with ID: ${productId}`);
+                }
             }
 
             return productsMap;
@@ -323,42 +342,16 @@ function generateProductCards(products) {
     // Function to return Categories in Page Content
     function getCategoriesContent() {
         return `getCategoriesContent`;
-    }
-
-    // Function to generate product list for an order
-function generateOrderProductList(products, productsMap) {
-    if (!Array.isArray(products) || products.length === 0) {
-        return "<p>No products in this order.</p>";
-    }
-
-    return `
-        <ul class="list-group mb-3">
-            ${products.map(prod => {
-                const productInfo = productsMap[prod.productId];
-                return `
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        ${productInfo ? productInfo.title : "Unknown Product"}
-                        <span class="badge bg-primary rounded-pill">Qty: ${prod.quantity}</span>
-                    </li>
-                `;
-            }).join('')}
-        </ul>
-    `;
-}
-    
+    } 
 
     // Function to return Categories in Page Content
     async function getOrdersContent() {
         try {
             const orders = await getAllOrders();
             const productsMap = await fetchProductsMap();
-
-            console.log(orders+"orders");
-            console.log(productsMap+"productsMap");
-            
     
-            console.log("Orders => ", orders);
-            console.log("productsMap => ", productsMap);
+            console.log("Orders:", orders);
+            console.log("Products Map:", productsMap);
     
             if (!Array.isArray(orders)) {
                 console.error("Expected an array of orders, but got:", orders);

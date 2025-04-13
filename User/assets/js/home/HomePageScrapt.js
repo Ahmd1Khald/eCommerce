@@ -21,16 +21,32 @@ document.querySelectorAll('.nav-links a').forEach(item => {
 // Wishlist Functionality
 const updateWishlistCount = () => {
     const wishlistCounts = document.querySelectorAll('#wishlistCount');
-    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const wishlist = JSON.parse(sessionStorage.getItem('wishlist')) || [];
     wishlistCounts.forEach(count => {
         count.textContent = wishlist.length;
     });
 };
 
-// Initialize wishlist count
-document.addEventListener('DOMContentLoaded', () => {
-    updateWishlistCount();
-});
+// Function to toggle product in wishlist
+window.toggleWishlist = function(productId, button) {
+    const wishlist = JSON.parse(sessionStorage.getItem('wishlist')) || [];
+    const index = wishlist.indexOf(productId);
+    
+    if (index === -1) {
+        // Add to wishlist
+        wishlist.push(productId);
+        button.innerHTML = '<i class="fas fa-heart"></i>';
+        showNotification('Product added to wishlist', 'success');
+    } else {
+        // Remove from wishlist
+        wishlist.splice(index, 1);
+        button.innerHTML = '<i class="far fa-heart"></i>';
+        showNotification('Product removed from wishlist', 'info');
+    }
+    
+    sessionStorage.setItem('wishlist', JSON.stringify(wishlist));
+    updateWishlistCount(); // Update the counter after modifying wishlist
+}
 
 // Shopping Cart Functionality
 let cartItems = [];
@@ -517,4 +533,22 @@ document.querySelectorAll('.view-all').forEach(button => {
     button.addEventListener('click', function() {
         navigateTo('/products');
     });
+});
+
+// Add event listeners to filters
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch products when page loads
+    fetchProducts();
+    
+    // Add event listeners to filters
+    document.getElementById('categoryFilter').addEventListener('change', filterProducts);
+    document.getElementById('priceFilter').addEventListener('change', filterProducts);
+    document.getElementById('sortBy').addEventListener('change', filterProducts);
+    
+    // Initialize cart
+    updateCartCount();
+    updateCartDisplay();
+    
+    // Initialize wishlist count
+    updateWishlistCount();
 });

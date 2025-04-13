@@ -90,8 +90,8 @@ document
           // Step 4: Navigate based on the role
           if (userData.role === "user") {
             alert("User logged in successfully!");
-            const queryString = `?id=${encodeURIComponent(userData.uid)}&name=${encodeURIComponent(userData.name)}&email=${encodeURIComponent(userData.email)}`;
-            window.location.replace(`/User/assets/views/index.html?admin=${queryString}`);
+            const queryString = `id=${encodeURIComponent(userData.uid)}&name=${encodeURIComponent(userData.name)}&email=${encodeURIComponent(userData.email)}`;
+            window.location.replace(`/User/assets/views/index.html?${queryString}`);
           } 
       }else {
         console.log("No user data found in the database.");

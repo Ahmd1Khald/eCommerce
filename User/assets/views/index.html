@@ -37,8 +37,11 @@
             </ul>
             
             <div class="nav-icons ms-4">
-               <a style="color: black;margin-right: 10px;" href="./wishlist.html"> <i class="fa-solid fa-heart"></i></a>
-             
+               <a style="color: black;margin-right: 10px; position: relative;" href="./wishlist.html"> 
+                 <i class="fa-solid fa-heart"></i>
+                 <span style="color:white;background-color: red;top: -15px;" class="wishlist-count" id="wishlistCount">0</span>
+               </a>
+              
               
                <a  onclick="toggleCart()" style="color: black; position: relative; cursor: pointer;margin-right: 10px;"><i class="fa-solid fa-cart-shopping ps-1"></i>  <span style="color:white;background-color: red;top: -15px;" class="cart-count" id="cartCount">0</span> </a>
          
@@ -148,7 +151,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+    import { getDatabase, child, ref, push, set, get, update } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -330,16 +333,93 @@
             setTimeout(() => notification.remove(), 500);
         }, 3000);
     };
-    
+
+    let userData;
+    document.addEventListener("DOMContentLoaded",function(){
+  // Get the query string from the URL
+const urlParams = new URLSearchParams(window.location.search);
+
+// Extract all parameters
+ userData = {
+  id: urlParams.get('id'),
+  name: urlParams.get('name'),
+  email: urlParams.get('email'),
+};
+
+console.log("userData");
+console.log(userData.id);
+});
+
+
+// get all orders from firebase
+function getAllOrders() {
+  const dbRef = ref(database);
+  return get(child(dbRef, "orders"))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const ordersData = snapshot.val();
+        return Object.entries(ordersData).map(([id, order]) => ({
+          id,
+          userId: order.userId,
+          userName: order.userName,
+          products: order.products,
+          status: order.status,
+          feedBack: order.feedBack,
+          time: order.time,
+        }));
+      } else {
+        return [];
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching orders:", error);
+      return [];
+    });
+}
+
+    // Create an Order in Firebase
+function createOrder(userId, userName, products, status, feedBack, time) {
+  const ordersRef = ref(database, "orders");
+
+  const OrderData = {
+    userId,
+    userName,
+    products,
+    status,
+    feedBack,
+    time,
+  };
+
+  const newOrderRef = push(ordersRef);
+
+  set(newOrderRef, OrderData)
+    .then(() => {
+      alert("Order created successfully!");
+      return getAllOrders().then((orders) => {
+        console.log(orders);
+      });
+    })
+    .catch((error) => {
+    console.error("Error creating order: ", error);
+    });
+}
     // Function for checkout
     window.checkout = function() {
         if (cart.length === 0) {
             alert('Your cart is empty!');
             return;
         }
+
+        console.log("cart=>"+cart[0].id);
+        cart.forEach(item => {
+            console.log(item.id);
+            
+        })
         
+        
+        createOrder(userData.id,userData.name,cart,'Pending','',Date.now());
         // For now, just show an alert
-        alert('Thank you for your purchase! This is a demo checkout.');
+        // alert('Thank you for your purchase! This is a demo checkout.');
         
         // Clear cart
         cart = [];
@@ -558,17 +638,20 @@
         // Initialize cart
         updateCartCount();
         updateCartDisplay();
+        
+        // Initialize wishlist count
+        updateWishlistCount();
     });
 
     // Function to check if a product is in the wishlist
     window.isInWishlist = function(productId) {
-        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const wishlist = JSON.parse(sessionStorage.getItem('wishlist')) || [];
         return wishlist.includes(productId);
     }
 
     // Function to toggle product in wishlist
     window.toggleWishlist = function(productId, button) {
-        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const wishlist = JSON.parse(sessionStorage.getItem('wishlist')) || [];
         const index = wishlist.indexOf(productId);
         
         if (index === -1) {
@@ -583,7 +666,8 @@
             showNotification('Product removed from wishlist', 'info');
         }
         
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        sessionStorage.setItem('wishlist', JSON.stringify(wishlist));
+        updateWishlistCount();
     }
 
     // Function to show notification
@@ -598,7 +682,15 @@
             notification.remove();
         }, 3000);
     }
+
+    // Function to update wishlist count
+    function updateWishlistCount() {
+        const wishlistCount = document.getElementById('wishlistCount');
+        const wishlist = JSON.parse(sessionStorage.getItem('wishlist')) || [];
+        wishlistCount.textContent = wishlist.length;
+    }
 </script>
+<script src="../js/nav.js"></script>
 <footer class="container-fluid bg-black">
   <div class="row  text-white  _footer ">
     <div class="col-3   text-center">
