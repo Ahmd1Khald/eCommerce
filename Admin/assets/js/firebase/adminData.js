@@ -128,7 +128,8 @@ console.log("adminData");
 console.log(adminData);
 
 
-document.getElementById("adminName").innerText = adminData.name;
+// document.getElementById("adminName").innerText = adminData.name;
+document.getElementById("adminName").innerText = localStorage.getItem('userName');
 });
 
 
@@ -138,6 +139,7 @@ document.getElementById("logoutBtn").addEventListener("click", (event) => {
   signOut(auth)
     .then(() => {
       confirm("Are you sure want to Log out?");
+      localStorage.removeItem('userName');
       window.location.replace("/Admin/assets/views/login.html");
     })
     .catch((error) => {

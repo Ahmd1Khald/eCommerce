@@ -63,6 +63,8 @@ function checkRoleAddPassAdminData(id){
         if (snapshot.exists()) {
           const userData = snapshot.val();
           console.log("User Role:", userData.role);
+          console.log("User Name:", userData.name);
+          localStorage.setItem('userName',userData.name);
           // Step 4: Navigate based on the role
           if (userData.role === "admin") {
             const queryString = `?id=${encodeURIComponent(userData.uid)}&name=${encodeURIComponent(userData.name)}&email=${encodeURIComponent(userData.email)}`;

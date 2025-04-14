@@ -179,24 +179,47 @@
                         <form id="contactForm">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control" placeholder="Your Name *" required>
-                                </div>
+                                  <input 
+                                  type="text" 
+                                  class="form-control" 
+                                  placeholder="Your Name *" 
+                                  name="name" 
+                                  required 
+                                  pattern="^[a-zA-Z\s]{3,}$" 
+                                  title="Please enter at least 3 alphabetic characters">                                </div>
                                 <div class="col-md-6">
-                                    <input type="email" class="form-control" placeholder="Your Email *" required>
-                                </div>
+                                  <input 
+                                  type="email" 
+                                  class="form-control" 
+                                  placeholder="Your Email *" 
+                                  name="email" 
+                                  required 
+                                  title="Please enter a valid email address">                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <input type="tel" class="form-control" placeholder="Your Phone *" required>
-                                </div>
+                                  <input 
+                                  type="tel" 
+                                  class="form-control" 
+                                  placeholder="Your Phone *" 
+                                  name="phone" 
+                                  required 
+                                  pattern="^\+?[0-9\s\-]{7,15}$" 
+                                  title="Please enter a valid phone number (7 to 15 digits)">                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <textarea class="form-control" placeholder="Your Message" rows="6"></textarea>
-                                </div>
+                                  <textarea 
+                                  class="form-control" 
+                                  placeholder="Your Message" 
+                                  rows="6" 
+                                  name="message" 
+                                  required 
+                                  minlength="10" 
+                                  title="Please enter a message with at least 10 characters"></textarea>                                </div>
                             </div>
                             <div class="text-end">
-                                <button type="submit" class="send-message-btn">Send Message</button>
+                              <button type="submit" class="send-message-btn">Send Message</button>
                             </div>
                         </form>
                     </div>
