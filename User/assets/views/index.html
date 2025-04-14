@@ -79,7 +79,7 @@
   <div style="margin-top: 76px;"></div>
   <div class="container-fluid pt-4">
     <div class="row justify-content-center ">
-        <div style="height: 400px;" class=" col-md-6 col-xxl-10 col-xl-8 col-lg-7 col-sm-5">
+        <div style="height: 400px;" class=" col-sm-10 col-md-5 col-lg-7 col-xl-7 col-xxl-8">
 
         <div class="col-1 text-center position-relative " style="width: 1000px; height: 400px;"id="imageDiv">
           <button id="divbutton1" class="divButton1"><i class="fas fa-angle-right"></i></button>
@@ -481,7 +481,14 @@
                 const updates = {};
                 products.forEach((product) => {
                     validProducts.push(product);
-                    updates[`products/${product.id}/stock`] = increment(-product.quantity);
+                    // Get current product stock
+                    const currentStock = allProducts.find(p => p.id === product.id).stock;
+                    // Calculate new stock
+                    let newStock = currentStock - product.quantity;
+                    // If new stock would be negative or zero, set it to 0
+                    newStock = newStock <= 0 ? 0 : newStock;
+                    // Update the stock
+                    updates[`products/${product.id}/stock`] = newStock;
                 });
 
                 // Create order data
